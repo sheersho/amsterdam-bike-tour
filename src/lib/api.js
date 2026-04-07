@@ -104,3 +104,24 @@ export async function fetchTourContent(token) {
     );
   }
 }
+
+export async function fetchTourStatus(token) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/tour/status`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (!response.ok) {
+      const error = new Error(await readError(response, 'Unable to validate your session right now.'));
+      error.status = response.status;
+      throw error;
+    }
+
+    return parseJson(response);
+  } catch (error) {
+    withNetworkMessage(
+      error,
+      'Unable to validate your session right now. Please check your connection and try again.',
+    );
+  }
+}

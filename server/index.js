@@ -108,6 +108,16 @@ function getBearerToken(req) {
   return header.slice('Bearer '.length).trim();
 }
 
+function getSessionPayload(token) {
+  if (!token) return null;
+
+  const payload = verifyToken(token);
+  if (!payload || !sessions.has(token)) return null;
+  if (!isEmailAllowed(payload.email)) return 'revoked';
+
+  return payload;
+}
+
 const server = http.createServer(async (req, res) => {
   if (!req.url) {
     sendJson(res, 404, { error: 'Not found.' });
@@ -188,13 +198,13 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
-    const payload = verifyToken(token);
-    if (!payload || !sessions.has(token)) {
+    const payload = getSessionPayload(token);
+    if (!payload) {
       sendJson(res, 401, { error: 'Invalid or expired token.' });
       return;
     }
 
-    if (!isEmailAllowed(payload.email)) {
+    if (payload === 'revoked') {
       sendJson(res, 403, { error: 'Access revoked for this account.' });
       return;
     }
@@ -203,6 +213,33 @@ const server = http.createServer(async (req, res) => {
       email: payload.email,
       waypoints: STOPS,
       faq: FAQ,
+    });
+    return;
+  }
+
+  if (req.method === 'GET' && requestUrl.pathname === '/tour/status') {
+    const token = getBearerToken(req);
+    if (!token) {
+      sendJson(res, 401, { error: 'Missing token.' });
+      return;
+    }
+
+    const payload = getSessionPayload(token);
+    if (!payload) {
+      sendJson(res, 401, { error: 'Invalid or expired token.' });
+      return;
+    }
+
+    if (payload === 'revoked') {
+      sendJson(res, 403, { error: 'Access revoked for this account.' });
+      return;
+    }
+
+    sendJson(res, 200, {
+      ok: true,
+      email: payload.email,
+      expiresAt: payload.expiresAt,
+      expiresInHours: Math.max(0, Math.ceil((payload.expiresAt - Date.now()) / (60 * 60 * 1000))),
     });
     return;
   }

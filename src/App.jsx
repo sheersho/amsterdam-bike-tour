@@ -9,26 +9,27 @@ import LoginPage from './components/LoginPage';
 import AccessPage from './components/AccessPage';
 import {
   fetchTourContent,
+  fetchTourStatus,
   normalizeEmail,
   requestMagicLink,
   verifyMagicToken,
 } from './lib/api';
 
-const TOUR_EMAIL_KEY = 'tour-email';
-const TOUR_TOKEN_KEY = 'tour-token';
-const TOUR_AUTH_EXPIRY_KEY = 'tour-auth-expiry';
+const TOUR_TOKEN_KEY = 'tour-auth-token';
+const LEGACY_TOUR_TOKEN_KEY = 'tour-token';
+const LEGACY_TOUR_EMAIL_KEY = 'tour-email';
+const LEGACY_TOUR_AUTH_EXPIRY_KEY = 'tour-auth-expiry';
 const TOUR_LAST_EMAIL_KEY = 'tour-last-email';
 
 function clearAuthStorage() {
-  localStorage.removeItem(TOUR_EMAIL_KEY);
   localStorage.removeItem(TOUR_TOKEN_KEY);
-  localStorage.removeItem(TOUR_AUTH_EXPIRY_KEY);
+  localStorage.removeItem(LEGACY_TOUR_TOKEN_KEY);
+  localStorage.removeItem(LEGACY_TOUR_EMAIL_KEY);
+  localStorage.removeItem(LEGACY_TOUR_AUTH_EXPIRY_KEY);
 }
 
-function saveAuthSession({ email, token, expiresAt }) {
-  localStorage.setItem(TOUR_EMAIL_KEY, normalizeEmail(email));
+function saveAuthToken(token) {
   localStorage.setItem(TOUR_TOKEN_KEY, token);
-  localStorage.setItem(TOUR_AUTH_EXPIRY_KEY, String(expiresAt));
 }
 
 function saveLastEmail(email) {
@@ -40,17 +41,8 @@ function readLastEmail() {
   return localStorage.getItem(TOUR_LAST_EMAIL_KEY) || '';
 }
 
-function readAuthSession() {
-  const email = localStorage.getItem(TOUR_EMAIL_KEY);
-  const token = localStorage.getItem(TOUR_TOKEN_KEY);
-  const expiresAt = Number(localStorage.getItem(TOUR_AUTH_EXPIRY_KEY) || 0);
-
-  if (!email || !token || expiresAt <= Date.now()) {
-    clearAuthStorage();
-    return null;
-  }
-
-  return { email, token, expiresAt };
+function readStoredToken() {
+  return localStorage.getItem(TOUR_TOKEN_KEY) || localStorage.getItem(LEGACY_TOUR_TOKEN_KEY) || '';
 }
 
 function getRoute() {
@@ -86,16 +78,18 @@ function isLocalDev() {
   return ['localhost', '127.0.0.1'].includes(window.location.hostname);
 }
 
-function expireSession(setAuthSession, setExpiredEmail, email) {
+function expireSession(setAuthToken, setAuthState, setExpiredEmail, email) {
   clearAuthStorage();
   if (email) saveLastEmail(email);
-  setAuthSession(null);
+  setAuthToken('');
+  setAuthState('anonymous');
   setExpiredEmail(email || readLastEmail());
 }
 
 export default function App() {
   const [route, setRoute] = useState(() => getRoute());
-  const [authSession, setAuthSession] = useState(() => readAuthSession());
+  const [authToken, setAuthToken] = useState(() => readStoredToken());
+  const [authState, setAuthState] = useState(() => (readStoredToken() ? 'checking' : 'anonymous'));
   const [expiredEmail, setExpiredEmail] = useState(() => readLastEmail());
   const [pendingRoute, setPendingRoute] = useState(null);
   const [page, setPage] = useState("landing");
@@ -104,7 +98,7 @@ export default function App() {
   const [contentState, setContentState] = useState({ status: 'idle', error: '' });
   const [contentReloadCount, setContentReloadCount] = useState(0);
   const feedbackLink = "https://forms.gle/2xmXFyHcSLPrvoBJA";
-  const isAuthenticated = Boolean(authSession?.token);
+  const isAuthenticated = authState === 'authenticated' && Boolean(authToken);
 
   useEffect(() => {
     const handleRouteChange = () => setRoute(getRoute());
@@ -113,22 +107,58 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (!isAuthenticated || route.path !== '/tour') return;
+    if (!authToken) return;
+
+    let cancelled = false;
+
+    async function validateSession() {
+      try {
+        setAuthState('checking');
+        await fetchTourStatus(authToken);
+        if (cancelled) return;
+        setAuthState('authenticated');
+      } catch (error) {
+        if (cancelled) return;
+        if (error.status === 401) {
+          expireSession(setAuthToken, setAuthState, setExpiredEmail);
+          updateLocation('/tour', { replace: true });
+          return;
+        }
+
+        if (error.status === 403) {
+          expireSession(setAuthToken, setAuthState, setExpiredEmail);
+          updateLocation('/tour', { replace: true });
+          return;
+        }
+
+        setAuthState('anonymous');
+      }
+    }
+
+    validateSession();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [authToken]);
+
+  useEffect(() => {
+    if (!isAuthenticated || authState !== 'authenticated' || route.path !== '/tour') return;
 
     let cancelled = false;
 
     async function loadTour() {
       try {
         setContentState({ status: 'loading', error: '' });
-        const payload = await fetchTourContent(authSession.token);
+        const payload = await fetchTourContent(authToken);
         if (cancelled) return;
         setTourContent(buildTourContent(payload));
         setContentState({ status: 'ready', error: '' });
       } catch (error) {
         if (cancelled) return;
         if (error.status === 401) {
-          expireSession(setAuthSession, setExpiredEmail, authSession.email);
-          updateLocation('/', { replace: true });
+          expireSession(setAuthToken, setAuthState, setExpiredEmail);
+          updateLocation('/tour', { replace: true });
           return;
         }
 
@@ -150,7 +180,7 @@ export default function App() {
     return () => {
       cancelled = true;
     };
-  }, [authSession, contentReloadCount, isAuthenticated, route.path]);
+  }, [authState, authToken, contentReloadCount, isAuthenticated, route.path]);
 
   const goToStop = (i) => {
     if (!isAuthenticated) {
@@ -176,10 +206,11 @@ export default function App() {
     setPage("allStops");
   };
 
-  const finishAuth = ({ email, token, expiresAt }) => {
-    saveAuthSession({ email, token, expiresAt });
+  const finishAuth = ({ email, token }) => {
+    saveAuthToken(token);
     saveLastEmail(email);
-    setAuthSession({ email: normalizeEmail(email), token, expiresAt });
+    setAuthToken(token);
+    setAuthState('authenticated');
     setExpiredEmail('');
     updateLocation('/tour', { replace: true });
 
@@ -208,38 +239,19 @@ export default function App() {
     finishAuth({
       email: response.email,
       token,
-      expiresAt: response.expiresAt,
     });
     return response;
   };
 
   const handleLogout = () => {
     clearAuthStorage();
-    setAuthSession(null);
+    setAuthToken('');
+    setAuthState('anonymous');
     setPendingRoute(null);
     setPage("landing");
     updateLocation('/', { replace: true });
     window.scrollTo(0, 0);
   };
-
-  useEffect(() => {
-    if (!authSession?.expiresAt) return;
-
-    const msRemaining = authSession.expiresAt - Date.now();
-
-    if (msRemaining <= 0) {
-      expireSession(setAuthSession, setExpiredEmail, authSession.email);
-      updateLocation('/', { replace: true });
-      return;
-    }
-
-    const timeout = window.setTimeout(() => {
-      expireSession(setAuthSession, setExpiredEmail, authSession.email);
-      updateLocation('/', { replace: true });
-    }, msRemaining);
-
-    return () => window.clearTimeout(timeout);
-  }, [authSession]);
 
   const stops = tourContent.stops;
   const faq = tourContent.faq;
@@ -271,6 +283,12 @@ export default function App() {
           helperText="We’ll email a one-tap access link that signs you in securely."
           buttonLabel="Sign Up"
         />
+      )}
+
+      {route.path === '/tour' && authState === 'checking' && (
+        <div className="auth-loading">
+          <p className="auth-loading-text">Checking your access...</p>
+        </div>
       )}
 
       {route.path === '/tour' && isAuthenticated && contentState.status === 'loading' && (
