@@ -1,6 +1,8 @@
 import React from 'react';
 import AmsterdamSkyline from './AmsterdamSkyline';
 import { FAQ } from '../data/tourdata';
+import { cityCenterImages } from '../data/images';
+
 
 export default function LandingPage({ onViewAll, onStopByStop }) {
   return (
@@ -11,8 +13,13 @@ export default function LandingPage({ onViewAll, onStopByStop }) {
 
       <div className="route-card">
         <div style={{ position: "relative" }}>
-          <div className="route-card-img-placeholder">
-            <span style={{ fontSize: 48, zIndex: 1, opacity: 0.6 }}>🚲 🌷</span>
+           <div className="route-card-img-placeholder">
+            <img
+              src={cityCenterImages[0]}
+              alt="Amsterdam city center aerial view"
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              loading="lazy"
+            />
           </div>
           <div className="route-card-overlay">
             <div className="route-card-label">City Center</div>
