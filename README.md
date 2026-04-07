@@ -100,7 +100,17 @@ If you’re new to this project, edit in this order:
 
 ## 🚀 Deployment Notes
 
-To create deployable files:
+This project is ready to deploy on **Cloudflare Pages**.
+
+Use these settings in Cloudflare Pages:
+
+- Build command: `npm run build`
+- Build output directory: `dist`
+- Root directory: `/` (leave default unless you deploy from a subfolder)
+
+Client-side routing is handled with [`public/_redirects`](/Users/sheersho/Documents/amsterdam-tour/public/_redirects), so routes like `/tour` and `/access` resolve correctly on refresh.
+
+To create deployable files locally:
 
 ```bash
 npm run build

@@ -2,8 +2,7 @@ import React from 'react';
 import AmsterdamSkyline from './AmsterdamSkyline';
 import { cityCenterImages } from '../data/images';
 
-
-export default function LandingPage({ faq, onViewAll, onStopByStop }) {
+export default function LandingPage({ faq, onViewAll, onStopByStop, onFindNearestStart }) {
   return (
     <div>
       <div className="landing-hero">
@@ -35,6 +34,9 @@ export default function LandingPage({ faq, onViewAll, onStopByStop }) {
           <button className="cta-btn cta-btn-outline" onClick={onViewAll}>View Entire Route</button>
           <button className="cta-btn cta-btn-filled" onClick={onStopByStop}>Go Stop by Stop</button>
         </div>
+        <button className="cta-btn cta-btn-outline location-cta" onClick={onFindNearestStart}>
+          Find Nearest Start
+        </button>
       </div>
 
       <div className="reassurance">

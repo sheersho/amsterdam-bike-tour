@@ -120,6 +120,11 @@ body {
   gap: 10px;
 }
 
+.location-cta {
+  width: 100%;
+  margin-top: 10px;
+}
+
 .cta-btn {
   flex: 1;
   padding: 13px 10px;
@@ -318,6 +323,60 @@ body {
 }
 
 .inline-buy-tour-actions {
+  margin-top: 14px;
+}
+
+.nearest-stop-page {
+  background:
+    radial-gradient(circle at top right, rgba(244, 213, 192, 0.55), transparent 34%),
+    linear-gradient(180deg, #f8f5f6 0%, #fff 100%);
+}
+
+.nearest-stop-hero {
+  background:
+    linear-gradient(135deg, rgba(36, 74, 96, 0.98), rgba(15, 39, 56, 0.96)),
+    #244a60;
+}
+
+.nearest-stop-card {
+  border: 1px solid rgba(36, 74, 96, 0.08);
+}
+
+.nearest-stop-result {
+  margin-top: 16px;
+  padding: 14px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(36, 74, 96, 0.08), rgba(139, 26, 43, 0.08));
+}
+
+.nearest-stop-kicker {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #244a60;
+}
+
+.nearest-stop-result h3 {
+  margin-top: 4px;
+  font-family: 'Merriweather', Georgia, serif;
+  color: #8b1a2b;
+  font-size: 22px;
+}
+
+.nearest-stop-meta {
+  margin-top: 6px;
+  font-size: 14px;
+  color: #4d4d4d;
+  line-height: 1.5;
+}
+
+.nearest-stop-link {
+  margin-top: 12px;
+}
+
+.nearest-stop-back {
+  width: 100%;
   margin-top: 14px;
 }
 

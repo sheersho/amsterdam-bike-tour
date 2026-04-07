@@ -7,6 +7,7 @@ import AllStopsPage from './components/AllStopsPage';
 import StopPage from './components/StopPage';
 import LoginPage from './components/LoginPage';
 import AccessPage from './components/AccessPage';
+import NearestStopPage from './components/NearestStopPage';
 import {
   fetchTourContent,
   fetchTourStatus,
@@ -58,6 +59,10 @@ function getRoute() {
 
   if (pathname === '/tour') {
     return { path: '/tour' };
+  }
+
+  if (pathname === '/nearest-stop') {
+    return { path: '/nearest-stop' };
   }
 
   return { path: '/' };
@@ -222,6 +227,11 @@ export default function App() {
     setPage("allStops");
   };
 
+  const goToNearestStart = () => {
+    updateLocation('/nearest-stop');
+    window.scrollTo(0, 0);
+  };
+
   const finishAuth = ({ email, token }) => {
     saveAuthToken(token);
     saveLastEmail(email);
@@ -291,6 +301,17 @@ export default function App() {
           faq={FAQ}
           onViewAll={goToAllStops}
           onStopByStop={() => goToStop(0)}
+          onFindNearestStart={goToNearestStart}
+        />
+      )}
+
+      {route.path === '/nearest-stop' && (
+        <NearestStopPage
+          stops={stops}
+          onBack={() => {
+            updateLocation('/', { replace: true });
+            window.scrollTo(0, 0);
+          }}
         />
       )}
 
@@ -353,6 +374,7 @@ export default function App() {
           faq={faq}
           onViewAll={goToAllStops}
           onStopByStop={() => goToStop(0)}
+          onFindNearestStart={goToNearestStart}
         />
       )}
 
