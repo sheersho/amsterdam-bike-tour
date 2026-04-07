@@ -1,16 +1,127 @@
-# React + Vite
+# 🚲 Amsterdam Tour by Sheersho & Abhishek (React + Vite)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple web app to explore an Amsterdam tour route stop by stop.  
+Built with **React** + **Vite** for fast development.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🧭 Project Overview (Plain English)
 
-## React Compiler
+This app helps a user:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- 👋 Start from a landing/home page
+- 🗺️ View tour stops
+- 📍 Open details for each stop
+- 🔁 Move through the route easily
 
-## Expanding the ESLint configuration
+Think of it like a mini digital tour guide for Amsterdam.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🛠️ Tech Stack
+
+- ⚛️ **React** — UI components
+- ⚡ **Vite** — fast dev server + build tool
+- 🧹 **ESLint** — code quality checks
+- 💅 **CSS** — styling
+
+---
+
+## 📁 Folder Guide
+
+> Main folders/files you’ll likely use:
+
+- `src/App.jsx` → app routing/layout entry
+- `src/components/` → UI pages/components
+  - `LandingPage.jsx` → first screen
+  - `AllStopsPage.jsx` → list of all stops
+  - `StopPage.jsx` → single stop details
+- `src/data/tourdata.js` → tour stop data
+- `public/` → static files (images/icons)
+- `README.md` → this guide
+
+---
+
+## ▶️ How to Run the Project (Mac)
+
+### 1) Install dependencies
+```bash
+npm install
+```
+
+### 2) Start development server
+```bash
+npm run dev
+```
+
+### 3) Open in browser
+Vite will show a local URL, usually:
+
+- `http://localhost:5173/`
+
+---
+
+## 🧪 Useful Commands
+
+```bash
+# Start dev server
+npm run dev
+
+# Build production files
+npm run build
+
+# Preview production build locally
+npm run preview
+
+# Run lint checks
+npm run lint
+```
+
+---
+
+## 🧭 How to Navigate the App
+
+- Start on the **Landing page** 👋
+- Go to **All Stops** to see the full tour list 🗂️
+- Click a stop to open **Stop details** 📍
+- Use navigation controls to move around 🔄
+
+---
+
+## ✍️ For New Developers
+
+If you’re new to this project, edit in this order:
+
+1. `src/data/tourdata.js` → change stop content
+2. `src/components/*.jsx` → adjust UI screens
+3. styles (`.css`) → tweak look and feel
+
+---
+
+## 🚀 Deployment Notes
+
+To create deployable files:
+
+```bash
+npm run build
+```
+
+Output is generated in the `dist/` folder.
+
+---
+
+## ❓Troubleshooting
+
+- If app doesn’t start:
+  - Check Node is installed: `node -v`
+  - Remove `node_modules` and reinstall:
+    ```bash
+    rm -rf node_modules package-lock.json
+    npm install
+    ```
+- If port is busy:
+  - Vite will suggest another port automatically.
+
+---
+
+Happy building! 🎉
