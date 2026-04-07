@@ -20,6 +20,18 @@ body {
   position: relative;
 }
 
+.auth-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-loading-text {
+  font-size: 15px;
+  color: #8b1a2b;
+  font-weight: 700;
+}
+
 /* ── Landing Page ── */
 .landing-hero {
   background: #8b1a2b;
@@ -187,6 +199,96 @@ body {
   font-size: 13px;
   color: #666;
   margin-top: 4px;
+}
+
+/* ── Login Page ── */
+.login-page {
+  min-height: 100vh;
+  background: #f8f5f6;
+}
+
+.login-hero {
+  padding-bottom: 22px;
+}
+
+.login-subtitle {
+  margin-top: 8px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.login-card {
+  margin: 18px 16px 0;
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.login-card h2 {
+  font-family: 'Merriweather', Georgia, serif;
+  color: #8b1a2b;
+  font-size: 22px;
+}
+
+.login-helper-text {
+  margin-top: 6px;
+  color: #666;
+  font-size: 14px;
+}
+
+.login-form {
+  margin-top: 14px;
+}
+
+.login-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+.login-input {
+  width: 100%;
+  border: 1px solid #d6d6d6;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 15px;
+  font-family: 'Source Sans 3', sans-serif;
+  color: #1a1a2e;
+}
+
+.login-input:focus {
+  outline: 2px solid rgba(139, 26, 43, 0.2);
+  border-color: #8b1a2b;
+}
+
+.login-error {
+  margin-top: 8px;
+  color: #b42318;
+  font-size: 13px;
+}
+
+.login-btn {
+  margin-top: 12px;
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  background: #8b1a2b;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: 'Source Sans 3', sans-serif;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.login-btn:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
 }
 
 /* ── All Stops Page ── */
@@ -739,4 +841,26 @@ body {
 .floating-feedback-btn:hover,
 .floating-feedback-btn:focus-visible {
   background: #741625;
+}
+
+.floating-logout-btn {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: rgba(26, 26, 46, 0.9);
+  color: #fff;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  z-index: 70;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.floating-logout-btn:hover,
+.floating-logout-btn:focus-visible {
+  background: #1a1a2e;
 }
