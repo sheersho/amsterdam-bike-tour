@@ -1,0 +1,58 @@
+import React from 'react';
+import AmsterdamSkyline from './AmsterdamSkyline';
+import { FAQ } from '../data/tourdata';
+
+export default function LandingPage({ onViewAll, onStopByStop }) {
+  return (
+    <div>
+      <div className="landing-hero">
+        <h1>Explore Amsterdam with our Self-Guided Bike Tours</h1>
+      </div>
+
+      <div className="route-card">
+        <div style={{ position: "relative" }}>
+          <div className="route-card-img-placeholder">
+            <span style={{ fontSize: 48, zIndex: 1, opacity: 0.6 }}>🚲 🌷</span>
+          </div>
+          <div className="route-card-overlay">
+            <div className="route-card-label">City Center</div>
+            <div className="route-card-meta">
+              <span>🕐</span> 14 KM | 10 Stops
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="choose-section">
+        <h2>Choose how you want to explore the route:</h2>
+        <div className="cta-row">
+          <button className="cta-btn cta-btn-outline" onClick={onViewAll}>View Entire Route</button>
+          <button className="cta-btn cta-btn-filled" onClick={onStopByStop}>Go Stop by Stop</button>
+        </div>
+      </div>
+
+      <div className="reassurance">
+        You can always comeback here. There's no wrong way to do this.
+      </div>
+
+      <div className="faq-section">
+        <h2 className="faq-title">Frequently Asked Questions</h2>
+        {FAQ.map((item, i) => (
+          <div key={i} className="faq-item">
+            <div className="faq-q">{i + 1}. {item.q}</div>
+            <div className="faq-a">
+              {Array.isArray(item.a) ? (
+                <ul>{item.a.map((li, j) => <li key={j}>{li}</li>)}</ul>
+              ) : (
+                <p>{item.a}</p>
+              )}
+              {item.note && <div className="faq-note">{item.note}</div>}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <AmsterdamSkyline />
+    </div>
+  );
+}
