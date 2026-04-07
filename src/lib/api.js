@@ -1,8 +1,16 @@
-const DEFAULT_API_BASE_URL = 'https://bike-tour-backend.billsbiketour.workers.dev';
+const PROD_API_BASE_URL = 'https://bike-tour-backend.billsbiketour.workers.dev';
+
+function getDefaultApiBaseUrl() {
+  if (typeof window !== 'undefined' && ['localhost', '127.0.0.1'].includes(window.location.hostname)) {
+    return '/api';
+  }
+
+  return PROD_API_BASE_URL;
+}
 
 export const API_BASE_URL = (
   import.meta.env.VITE_API_BASE_URL ||
-  DEFAULT_API_BASE_URL
+  getDefaultApiBaseUrl()
 ).replace(/\/+$/, '');
 
 export function normalizeEmail(email) {
@@ -22,44 +30,77 @@ async function readError(response, fallbackMessage) {
   return payload?.error || fallbackMessage;
 }
 
-export async function requestMagicLink(email) {
-  const response = await fetch(`${API_BASE_URL}/auth/send-link`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: normalizeEmail(email) }),
-  });
+function isNetworkError(error) {
+  return error instanceof TypeError && /failed to fetch/i.test(error.message || '');
+}
 
-  if (!response.ok) {
-    throw new Error(await readError(response, 'Unable to send your access link right now.'));
+function withNetworkMessage(error, fallbackMessage) {
+  if (isNetworkError(error)) {
+    throw new Error(fallbackMessage);
   }
 
-  return parseJson(response);
+  throw error;
+}
+
+export async function requestMagicLink(email) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/auth/send-link`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: normalizeEmail(email) }),
+    });
+
+    if (!response.ok) {
+      throw new Error(await readError(response, 'Unable to send your access link right now.'));
+    }
+
+    return parseJson(response);
+  } catch (error) {
+    withNetworkMessage(
+      error,
+      'Unable to reach the access service right now. Please check your connection and try again.',
+    );
+  }
 }
 
 export async function verifyMagicToken(token) {
-  const response = await fetch(
-    `${API_BASE_URL}/auth/verify?token=${encodeURIComponent(token)}`,
-  );
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/auth/verify?token=${encodeURIComponent(token)}`,
+    );
 
-  if (!response.ok) {
-    const error = new Error(await readError(response, 'Invalid or expired token.'));
-    error.status = response.status;
-    throw error;
+    if (!response.ok) {
+      const error = new Error(await readError(response, 'Invalid or expired token.'));
+      error.status = response.status;
+      throw error;
+    }
+
+    return parseJson(response);
+  } catch (error) {
+    withNetworkMessage(
+      error,
+      'Unable to verify your access link right now. Please try again in a moment.',
+    );
   }
-
-  return parseJson(response);
 }
 
 export async function fetchTourContent(token) {
-  const response = await fetch(`${API_BASE_URL}/tour/content`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  try {
+    const response = await fetch(`${API_BASE_URL}/tour/content`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
-  if (!response.ok) {
-    const error = new Error(await readError(response, 'Unable to load your tour right now.'));
-    error.status = response.status;
-    throw error;
+    if (!response.ok) {
+      const error = new Error(await readError(response, 'Unable to load your tour right now.'));
+      error.status = response.status;
+      throw error;
+    }
+
+    return parseJson(response);
+  } catch (error) {
+    withNetworkMessage(
+      error,
+      'Unable to load your tour right now. Please check your connection and try again.',
+    );
   }
-
-  return parseJson(response);
 }

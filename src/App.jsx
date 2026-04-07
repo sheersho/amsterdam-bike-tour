@@ -113,12 +113,6 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (route.path === '/' && isAuthenticated) {
-      updateLocation('/tour', { replace: true });
-    }
-  }, [isAuthenticated, route.path]);
-
-  useEffect(() => {
     if (!isAuthenticated || route.path !== '/tour') return;
 
     let cancelled = false;
@@ -161,7 +155,7 @@ export default function App() {
   const goToStop = (i) => {
     if (!isAuthenticated) {
       setPendingRoute({ page: "stop", stopIndex: i });
-      updateLocation('/');
+      updateLocation('/tour');
       window.scrollTo(0, 0);
       return;
     }
@@ -174,7 +168,7 @@ export default function App() {
   const goToAllStops = () => {
     if (!isAuthenticated) {
       setPendingRoute({ page: "allStops" });
-      updateLocation('/');
+      updateLocation('/tour');
       window.scrollTo(0, 0);
       return;
     }
@@ -253,21 +247,10 @@ export default function App() {
   return (
     <div className="app">
       {route.path === '/' && (
-        <LoginPage
-          onRequestAccess={handleRequestAccess}
-          initialEmail={expiredEmail}
-          title={isAuthenticated ? 'Access Active' : expiredEmail ? 'Your Tour Has Expired' : 'Get Access'}
-          subtitle={
-            expiredEmail
-              ? 'Your tour access has expired. Enter your email and we’ll send a fresh magic link.'
-              : 'Enter your email and we’ll send a secure magic link to start your Amsterdam bike tour.'
-          }
-          helperText={
-            expiredEmail
-              ? 'Use the same email address to restart your 48-hour access window.'
-              : 'We’ll email a one-tap link that signs you in securely.'
-          }
-          buttonLabel={expiredEmail ? 'Resend Access Link' : 'Get Access'}
+        <LandingPage
+          faq={FAQ}
+          onViewAll={goToAllStops}
+          onStopByStop={() => goToStop(0)}
         />
       )}
 
@@ -283,10 +266,10 @@ export default function App() {
         <LoginPage
           onRequestAccess={handleRequestAccess}
           initialEmail={expiredEmail}
-          title="Get Access"
-          subtitle="Enter your email and we’ll send a secure magic link to start your Amsterdam bike tour."
-          helperText="We’ll email a one-tap link that signs you in securely."
-          buttonLabel="Get Access"
+          title="Sign Up to Get Access Code"
+          subtitle="Sign up with your email and we’ll send a secure access code link to start your Amsterdam bike tour."
+          helperText="We’ll email a one-tap access link that signs you in securely."
+          buttonLabel="Sign Up"
         />
       )}
 
