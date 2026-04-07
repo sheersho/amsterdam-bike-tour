@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import AmsterdamSkyline from './AmsterdamSkyline';
+import { TOUR_PURCHASE_REQUIRED_MESSAGE } from '../lib/api';
 
 export default function LoginPage({
   onRequestAccess,
@@ -8,12 +9,15 @@ export default function LoginPage({
   subtitle = 'Enter your email and we’ll send a secure link that unlocks your tour for 48 hours.',
   helperText = 'Use the same email address you booked with.',
   buttonLabel = 'Get Access',
+  purchaseUrl = 'https://toursandtravels.amsterdam',
+  supportEmail = 'info@toursandtravels.amsterdam',
 }) {
   const [emailId, setEmailId] = useState(initialEmail);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [previewLink, setPreviewLink] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const requiresNewTour = error === TOUR_PURCHASE_REQUIRED_MESSAGE;
 
   useEffect(() => {
     setEmailId(initialEmail);
@@ -54,33 +58,58 @@ export default function LoginPage({
 
       <div className="login-card">
         <h2>{title}</h2>
-        <p className="login-helper-text">{helperText}</p>
+        <p className="login-helper-text">
+          {requiresNewTour
+            ? 'This access can no longer be restored. Buy a new tour or contact the admin for help.'
+            : helperText}
+        </p>
 
-        <form className="login-form" onSubmit={handleSubmit}>
-          <label className="login-label" htmlFor="emailId">Email</label>
-          <input
-            id="emailId"
-            type="email"
-            autoComplete="email"
-            value={emailId}
-            onChange={(e) => setEmailId(e.target.value)}
-            className="login-input"
-            placeholder="you@example.com"
-            required
-          />
+        {!requiresNewTour && (
+          <form className="login-form" onSubmit={handleSubmit}>
+            <label className="login-label" htmlFor="emailId">Email</label>
+            <input
+              id="emailId"
+              type="email"
+              autoComplete="email"
+              value={emailId}
+              onChange={(e) => setEmailId(e.target.value)}
+              className="login-input"
+              placeholder="you@example.com"
+              required
+            />
 
-          {error && <p className="login-error">{error}</p>}
-          {successMessage && <p className="login-success">{successMessage}</p>}
-          {previewLink && (
-            <a className="magic-link-preview" href={previewLink}>
-              Open preview access link
-            </a>
-          )}
+            {error && <p className="login-error">{error}</p>}
+            {successMessage && <p className="login-success">{successMessage}</p>}
+            {previewLink && (
+              <a className="magic-link-preview" href={previewLink}>
+                Open preview access link
+              </a>
+            )}
 
-          <button type="submit" className="login-btn" disabled={submitting}>
-            {submitting ? 'Sending...' : buttonLabel}
-          </button>
-        </form>
+            <button type="submit" className="login-btn" disabled={submitting}>
+              {submitting ? 'Sending...' : buttonLabel}
+            </button>
+          </form>
+        )}
+
+        {requiresNewTour && (
+          <>
+            <p className="login-error">{error}</p>
+            <div className="buy-tour-actions inline-buy-tour-actions">
+              <a
+                className="login-btn buy-tour-primary"
+                href={purchaseUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Buy New Tour
+              </a>
+              <a className="cta-btn cta-btn-outline buy-tour-secondary" href={`mailto:${supportEmail}`}>
+                Contact Admin
+              </a>
+            </div>
+          </>
+        )}
       </div>
 
       <AmsterdamSkyline />

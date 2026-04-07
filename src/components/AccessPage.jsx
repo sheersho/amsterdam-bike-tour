@@ -2,7 +2,13 @@ import React, { useEffect, useState } from 'react';
 import AmsterdamSkyline from './AmsterdamSkyline';
 import { TOUR_PURCHASE_REQUIRED_MESSAGE } from '../lib/api';
 
-export default function AccessPage({ token, onVerify, onResend }) {
+export default function AccessPage({
+  token,
+  onVerify,
+  onResend,
+  purchaseUrl = 'https://toursandtravels.amsterdam',
+  supportEmail = 'info@toursandtravels.amsterdam',
+}) {
   const [status, setStatus] = useState(token ? 'verifying' : 'missing');
   const [error, setError] = useState('');
   const [email, setEmail] = useState('');
@@ -105,6 +111,22 @@ export default function AccessPage({ token, onVerify, onResend }) {
           <a className="magic-link-preview" href={previewLink}>
             Open preview access link
           </a>
+        )}
+
+        {requiresNewTour && (
+          <div className="buy-tour-actions inline-buy-tour-actions">
+            <a
+              className="login-btn buy-tour-primary"
+              href={purchaseUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Buy New Tour
+            </a>
+            <a className="cta-btn cta-btn-outline buy-tour-secondary" href={`mailto:${supportEmail}`}>
+              Contact Admin
+            </a>
+          </div>
         )}
 
         {status !== 'verifying' && status !== 'success' && !requiresNewTour && (

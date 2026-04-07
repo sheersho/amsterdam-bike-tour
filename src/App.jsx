@@ -250,26 +250,18 @@ export default function App() {
       if (isPurchaseRequiredError(error)) {
         saveLastEmail(email);
         setExpiredEmail(normalizeEmail(email));
-        updateLocation('/buy-new-tour');
       }
       throw error;
     }
   };
 
   const handleVerifyAccess = async (token) => {
-    try {
-      const response = await verifyMagicToken(token);
-      finishAuth({
-        email: response.email,
-        token,
-      });
-      return response;
-    } catch (error) {
-      if (isPurchaseRequiredError(error)) {
-        updateLocation('/buy-new-tour', { replace: true });
-      }
-      throw error;
-    }
+    const response = await verifyMagicToken(token);
+    finishAuth({
+      email: response.email,
+      token,
+    });
+    return response;
   };
 
   const handleLogout = () => {
@@ -300,6 +292,7 @@ export default function App() {
           token={route.token}
           onVerify={handleVerifyAccess}
           onResend={handleRequestAccess}
+          purchaseUrl={BUY_NEW_TOUR_URL}
         />
       )}
 
@@ -321,6 +314,7 @@ export default function App() {
           subtitle="Sign up with your email and we’ll send a secure access code link to start your Amsterdam bike tour."
           helperText="We’ll email a one-tap access link that signs you in securely."
           buttonLabel="Sign Up"
+          purchaseUrl={BUY_NEW_TOUR_URL}
         />
       )}
 

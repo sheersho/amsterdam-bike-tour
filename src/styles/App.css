@@ -333,6 +333,10 @@ body {
   gap: 12px;
 }
 
+.inline-buy-tour-actions {
+  margin-top: 14px;
+}
+
 .buy-tour-primary {
   display: inline-flex;
   align-items: center;
