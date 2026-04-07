@@ -5,6 +5,7 @@ import { TOUR_PURCHASE_REQUIRED_MESSAGE } from '../lib/api';
 export default function LoginPage({
   onRequestAccess,
   initialEmail = '',
+  initialError = '',
   title = 'Get Access',
   subtitle = 'Enter your email and we’ll send a secure link that unlocks your tour for 48 hours.',
   helperText = 'Use the same email address you booked with.',
@@ -22,6 +23,10 @@ export default function LoginPage({
   useEffect(() => {
     setEmailId(initialEmail);
   }, [initialEmail]);
+
+  useEffect(() => {
+    setError(initialError);
+  }, [initialError]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

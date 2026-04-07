@@ -7,13 +7,13 @@ import AllStopsPage from './components/AllStopsPage';
 import StopPage from './components/StopPage';
 import LoginPage from './components/LoginPage';
 import AccessPage from './components/AccessPage';
-import BuyNewTourPage from './components/BuyNewTourPage';
 import {
   fetchTourContent,
   fetchTourStatus,
   isPurchaseRequiredError,
   normalizeEmail,
   requestMagicLink,
+  TOUR_PURCHASE_REQUIRED_MESSAGE,
   verifyMagicToken,
 } from './lib/api';
 
@@ -22,7 +22,7 @@ const LEGACY_TOUR_TOKEN_KEY = 'tour-token';
 const LEGACY_TOUR_EMAIL_KEY = 'tour-email';
 const LEGACY_TOUR_AUTH_EXPIRY_KEY = 'tour-auth-expiry';
 const TOUR_LAST_EMAIL_KEY = 'tour-last-email';
-const BUY_NEW_TOUR_URL = 'https://toursandtravels.amsterdam';
+const PURCHASE_URL = 'https://toursandtravels.amsterdam';
 
 function clearAuthStorage() {
   localStorage.removeItem(TOUR_TOKEN_KEY);
@@ -59,10 +59,6 @@ function getRoute() {
 
   if (pathname === '/tour') {
     return { path: '/tour' };
-  }
-
-  if (pathname === '/buy-new-tour') {
-    return { path: '/buy-new-tour' };
   }
 
   return { path: '/' };
@@ -104,6 +100,7 @@ export default function App() {
   const [tourContent, setTourContent] = useState(() => ({ stops: STOPS, faq: FAQ }));
   const [contentState, setContentState] = useState({ status: 'idle', error: '' });
   const [contentReloadCount, setContentReloadCount] = useState(0);
+  const [authInlineError, setAuthInlineError] = useState('');
   const feedbackLink = "https://forms.gle/2xmXFyHcSLPrvoBJA";
   const isAuthenticated = authState === 'authenticated' && Boolean(authToken);
 
@@ -123,21 +120,25 @@ export default function App() {
         setAuthState('checking');
         await fetchTourStatus(authToken);
         if (cancelled) return;
+        setAuthInlineError('');
         setAuthState('authenticated');
       } catch (error) {
         if (cancelled) return;
         if (error.status === 401) {
           expireSession(setAuthToken, setAuthState, setExpiredEmail);
+          setAuthInlineError('');
           updateLocation('/tour', { replace: true });
           return;
         }
 
         if (isPurchaseRequiredError(error)) {
           expireSession(setAuthToken, setAuthState, setExpiredEmail);
-          updateLocation('/buy-new-tour', { replace: true });
+          setAuthInlineError(TOUR_PURCHASE_REQUIRED_MESSAGE);
+          updateLocation('/tour', { replace: true });
           return;
         }
 
+        setAuthInlineError('');
         setAuthState('anonymous');
       }
     }
@@ -161,17 +162,20 @@ export default function App() {
         if (cancelled) return;
         setTourContent(buildTourContent(payload));
         setContentState({ status: 'ready', error: '' });
+        setAuthInlineError('');
       } catch (error) {
         if (cancelled) return;
         if (error.status === 401) {
           expireSession(setAuthToken, setAuthState, setExpiredEmail);
+          setAuthInlineError('');
           updateLocation('/tour', { replace: true });
           return;
         }
 
         if (isPurchaseRequiredError(error)) {
           expireSession(setAuthToken, setAuthState, setExpiredEmail);
-          updateLocation('/buy-new-tour', { replace: true });
+          setAuthInlineError(TOUR_PURCHASE_REQUIRED_MESSAGE);
+          updateLocation('/tour', { replace: true });
           return;
         }
 
@@ -225,6 +229,7 @@ export default function App() {
     setAuthToken(token);
     setAuthState('authenticated');
     setExpiredEmail('');
+    setAuthInlineError('');
     updateLocation('/tour', { replace: true });
 
     if (pendingRoute?.page === "stop") {
@@ -245,11 +250,13 @@ export default function App() {
       const response = await requestMagicLink(email);
       saveLastEmail(email);
       setExpiredEmail(normalizeEmail(email));
+      setAuthInlineError('');
       return response;
     } catch (error) {
       if (isPurchaseRequiredError(error)) {
         saveLastEmail(email);
         setExpiredEmail(normalizeEmail(email));
+        setAuthInlineError(TOUR_PURCHASE_REQUIRED_MESSAGE);
       }
       throw error;
     }
@@ -268,6 +275,7 @@ export default function App() {
     clearAuthStorage();
     setAuthToken('');
     setAuthState('anonymous');
+    setAuthInlineError('');
     setPendingRoute(null);
     setPage("landing");
     updateLocation('/', { replace: true });
@@ -292,17 +300,7 @@ export default function App() {
           token={route.token}
           onVerify={handleVerifyAccess}
           onResend={handleRequestAccess}
-          purchaseUrl={BUY_NEW_TOUR_URL}
-        />
-      )}
-
-      {route.path === '/buy-new-tour' && (
-        <BuyNewTourPage
-          purchaseUrl={BUY_NEW_TOUR_URL}
-          onGoHome={() => {
-            updateLocation('/', { replace: true });
-            window.scrollTo(0, 0);
-          }}
+          purchaseUrl={PURCHASE_URL}
         />
       )}
 
@@ -314,7 +312,8 @@ export default function App() {
           subtitle="Sign up with your email and we’ll send a secure access code link to start your Amsterdam bike tour."
           helperText="We’ll email a one-tap access link that signs you in securely."
           buttonLabel="Sign Up"
-          purchaseUrl={BUY_NEW_TOUR_URL}
+          purchaseUrl={PURCHASE_URL}
+          initialError={authInlineError}
         />
       )}
 
