@@ -10,6 +10,7 @@ export default function App() {
   // pages: "landing" | "allStops" | "stop"
   const [page, setPage] = useState("landing");
   const [currentStop, setCurrentStop] = useState(0);
+  const feedbackLink = "https://forms.gle/2xmXFyHcSLPrvoBJA";
 
   const goToStop = (i) => {
     setCurrentStop(i);
@@ -41,6 +42,14 @@ export default function App() {
           onHome={() => { setPage("landing"); window.scrollTo(0, 0); }}
         />
       )}
+
+      <a
+        className="floating-feedback-btn"
+        href={feedbackLink}
+        aria-label="Help us improve"
+      >
+        Help Us Improve
+      </a>
     </div>
   );
 }

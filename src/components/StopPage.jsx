@@ -53,10 +53,6 @@ export default function StopPage({ stop, stopIndex, onNav, onHome }) {
         </div>
       </div>
 
-      <div className="help-btn-row">
-        <button className="help-btn">Help us Improve</button>
-      </div>
-
       {/* Narrative or Map */}
       {showMap ? (
         <iframe
