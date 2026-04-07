@@ -1,57 +1,48 @@
 import React, { useRef } from 'react';
 import AmsterdamSkyline from './AmsterdamSkyline';
-import { STOPS, HERO_COLORS, HERO_EMOJI } from '../data/tourdata';
+import { STOPS, HERO_EMOJI } from '../data/tourdata';
 
 export default function AllStopsPage({ onSelectStop, onHome }) {
   const topRef = useRef(null);
   return (
     <div>
       <div ref={topRef} />
-      <div className="landing-hero" style={{ paddingBottom: 18 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
-          <button onClick={onHome} style={{ background: "none", border: "none", color: "#fff", fontSize: 22, cursor: "pointer", padding: 0 }}>←</button>
-          <h1 style={{ fontSize: 22 }}>All Stops</h1>
+      <div className="landing-hero all-stops-hero">
+        <div className="all-stops-header">
+          <button className="all-stops-back-btn" onClick={onHome}>←</button>
+          <h1 className="all-stops-title">All Stops</h1>
         </div>
-        <p style={{ color: "rgba(255,255,255,0.8)", fontSize: 14 }}>Tap any stop to explore</p>
+        <p className="all-stops-subtitle">Tap any stop to explore</p>
       </div>
 
-      <div style={{ padding: "16px" }}>
+      <div className="all-stops-list">
         {STOPS.map((stop, i) => (
           <div
             key={stop.id}
             onClick={() => onSelectStop(i)}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 14,
-              padding: "14px 12px",
-              marginBottom: 8,
-              background: "#fff",
-              borderRadius: 10,
-              boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
-              cursor: "pointer",
-              border: "1px solid #eee",
-              WebkitTapHighlightColor: "transparent",
-            }}
+            className="all-stops-card"
           >
-            <div style={{
-              width: 44, height: 44,
-              borderRadius: 10,
-              background: stop.image ? `url(${stop.image}) center/cover no-repeat` : HERO_COLORS[i],
-              display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: 22, flexShrink: 0,
-            }}>
-              {!stop.image && HERO_EMOJI[i]}
+            <div className={`all-stops-thumb ${!stop.image ? `all-stops-thumb-color-${i + 1}` : ''}`}>
+              {stop.image ? (
+                <img
+                  className="all-stops-thumb-image"
+                  src={stop.image}
+                  alt={stop.name}
+                  loading="lazy"
+                />
+              ) : (
+                HERO_EMOJI[i]
+              )}
             </div>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontWeight: 700, fontSize: 15, color: "#1a1a2e" }}>
+            <div className="all-stops-card-content">
+              <div className="all-stops-card-title">
                 {i + 1}. {stop.name}
               </div>
-              <div style={{ fontSize: 13, color: "#888", marginTop: 2 }}>
+              <div className="all-stops-card-subtitle">
                 Tap to read & explore
               </div>
             </div>
-            <span style={{ color: "#8b1a2b", fontSize: 18, fontWeight: 700 }}>›</span>
+            <span className="all-stops-card-chevron">›</span>
           </div>
         ))}
       </div>

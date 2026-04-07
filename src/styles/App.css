@@ -55,6 +55,16 @@ body {
   overflow: hidden;
 }
 
+.route-card-media {
+  position: relative;
+}
+
+.route-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .route-card-overlay {
   position: absolute;
   bottom: 0;
@@ -179,6 +189,134 @@ body {
   margin-top: 4px;
 }
 
+/* ── All Stops Page ── */
+.all-stops-hero {
+  padding-bottom: 18px;
+}
+
+.all-stops-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.all-stops-back-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.all-stops-title {
+  font-size: 22px;
+}
+
+.all-stops-subtitle {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+}
+
+.all-stops-list {
+  padding: 16px;
+}
+
+.all-stops-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 12px;
+  margin-bottom: 8px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  border: 1px solid #eee;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.all-stops-thumb {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.all-stops-thumb-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.all-stops-thumb-color-1 {
+  background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+}
+
+.all-stops-thumb-color-2 {
+  background: linear-gradient(135deg, #2c3e50, #4ca1af);
+}
+
+.all-stops-thumb-color-3 {
+  background: linear-gradient(135deg, #614385, #516395);
+}
+
+.all-stops-thumb-color-4 {
+  background: linear-gradient(135deg, #4a6741, #8fbc8f);
+}
+
+.all-stops-thumb-color-5 {
+  background: linear-gradient(135deg, #c85a6e, #e8a0b0);
+}
+
+.all-stops-thumb-color-6 {
+  background: linear-gradient(135deg, #2e7d32, #81c784);
+}
+
+.all-stops-thumb-color-7 {
+  background: linear-gradient(135deg, #283593, #5c6bc0);
+}
+
+.all-stops-thumb-color-8 {
+  background: linear-gradient(135deg, #4e342e, #8d6e63);
+}
+
+.all-stops-thumb-color-9 {
+  background: linear-gradient(135deg, #d4456a, #f48fb1);
+}
+
+.all-stops-thumb-color-10 {
+  background: linear-gradient(135deg, #b71c1c, #ef5350);
+}
+
+.all-stops-card-content {
+  flex: 1;
+}
+
+.all-stops-card-title {
+  font-weight: 700;
+  font-size: 15px;
+  color: #1a1a2e;
+}
+
+.all-stops-card-subtitle {
+  font-size: 13px;
+  color: #888;
+  margin-top: 2px;
+}
+
+.all-stops-card-chevron {
+  color: #8b1a2b;
+  font-size: 18px;
+  font-weight: 700;
+}
+
 /* ── Stop Page ── */
 .stop-hero {
   width: 100%;
@@ -195,6 +333,60 @@ body {
   justify-content: center;
   font-size: 56px;
   color: rgba(255, 255, 255, 0.4);
+}
+
+.stop-hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.stop-hero-overlay {
+  position: absolute;
+  inset: 0;
+}
+
+.stop-hero-gradient-1 {
+  background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+}
+
+.stop-hero-gradient-2 {
+  background: linear-gradient(135deg, #2c3e50, #4ca1af);
+}
+
+.stop-hero-gradient-3 {
+  background: linear-gradient(135deg, #614385, #516395);
+}
+
+.stop-hero-gradient-4 {
+  background: linear-gradient(135deg, #4a6741, #8fbc8f);
+}
+
+.stop-hero-gradient-5 {
+  background: linear-gradient(135deg, #c85a6e, #e8a0b0);
+}
+
+.stop-hero-gradient-6 {
+  background: linear-gradient(135deg, #2e7d32, #81c784);
+}
+
+.stop-hero-gradient-7 {
+  background: linear-gradient(135deg, #283593, #5c6bc0);
+}
+
+.stop-hero-gradient-8 {
+  background: linear-gradient(135deg, #4e342e, #8d6e63);
+}
+
+.stop-hero-gradient-9 {
+  background: linear-gradient(135deg, #d4456a, #f48fb1);
+}
+
+.stop-hero-gradient-10 {
+  background: linear-gradient(135deg, #b71c1c, #ef5350);
 }
 
 .toggle-bar {
@@ -319,6 +511,10 @@ body {
   display: block;
 }
 
+.map-embed-spaced {
+  margin-top: 8px;
+}
+
 .other-tours {
   padding: 24px 16px;
   background: #f0f0f0;
@@ -352,6 +548,22 @@ body {
   font-size: 28px;
 }
 
+.tour-promo-img-west {
+  background: #e8f5e9;
+}
+
+.tour-promo-img-east {
+  background: #e3f2fd;
+}
+
+.tour-promo-img-north {
+  background: #fff3e0;
+}
+
+.tour-promo-img-south {
+  background: #fce4ec;
+}
+
 .tour-promo-info {
   padding: 12px 14px;
 }
@@ -371,6 +583,13 @@ body {
 .next-btn-container {
   padding: 16px;
   background: #8b1a2b;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.next-btn-container.first-stop {
+  justify-content: flex-end;
 }
 
 .next-btn {
@@ -433,6 +652,55 @@ body {
   background: #c85a6e;
   border-radius: 2px 2px 0 0;
   position: relative;
+  opacity: 0.85;
+}
+
+.building:nth-child(10n + 1) {
+  height: 35px;
+}
+
+.building:nth-child(10n + 2) {
+  height: 50px;
+}
+
+.building:nth-child(10n + 3) {
+  height: 28px;
+}
+
+.building:nth-child(10n + 4) {
+  height: 60px;
+}
+
+.building:nth-child(10n + 5) {
+  height: 42px;
+}
+
+.building:nth-child(10n + 6) {
+  height: 55px;
+}
+
+.building:nth-child(10n + 7) {
+  height: 30px;
+}
+
+.building:nth-child(10n + 8) {
+  height: 65px;
+}
+
+.building:nth-child(10n + 9) {
+  height: 38px;
+}
+
+.building:nth-child(10n) {
+  height: 48px;
+}
+
+.building:nth-child(3n) {
+  opacity: 0.78;
+}
+
+.building:nth-child(4n) {
+  opacity: 0.92;
 }
 
 .building::after {

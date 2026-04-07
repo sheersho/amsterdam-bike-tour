@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import AmsterdamSkyline from './AmsterdamSkyline';
-import { STOPS, HERO_COLORS, HERO_EMOJI } from '../data/tourdata';
+import { STOPS, HERO_EMOJI } from '../data/tourdata';
 
 export default function StopPage({ stop, stopIndex, onNav, onHome }) {
   const [showMap, setShowMap] = useState(false);
@@ -15,15 +15,15 @@ export default function StopPage({ stop, stopIndex, onNav, onHome }) {
       <div ref={topRef} />
 
       {/* Hero */}
-      <div className="stop-hero" style={{ position: "relative" }}>
+      <div className="stop-hero">
         {stop.image ? (
-          <img src={stop.image} alt={stop.name} style={{ width: "100%", height: "100%", objectFit: "cover", position: "absolute", top: 0, left: 0 }} />
+          <img src={stop.image} alt={stop.name} className="stop-hero-image" />
         ) : (
-          <div className="stop-hero-placeholder" style={{ background: HERO_COLORS[stopIndex] }}>
+          <div className={`stop-hero-placeholder stop-hero-gradient-${stopIndex + 1}`}>
             {HERO_EMOJI[stopIndex]}
           </div>
         )}
-        <div style={{ position: "absolute", inset: 0 }} />
+        <div className="stop-hero-overlay" />
       </div>
 
       {/* Toggle bar */}
@@ -75,12 +75,11 @@ export default function StopPage({ stop, stopIndex, onNav, onHome }) {
       {/* Map always below narrative when not toggled */}
       {!showMap && (
         <iframe
-          className="map-embed"
+          className="map-embed map-embed-spaced"
           src={`https://www.google.com/maps?q=${stop.lat},${stop.lng}&z=16&output=embed`}
           loading="lazy"
           allowFullScreen
           title={stop.name}
-          style={{ marginTop: 8 }}
         />
       )}
 
@@ -88,13 +87,13 @@ export default function StopPage({ stop, stopIndex, onNav, onHome }) {
       <div className="other-tours">
         <h3>Explore Amsterdam with Bill's self-guided bike tours</h3>
         {[
-          { name: "Amsterdam West", emoji: "🌿", bg: "#e8f5e9" },
-          { name: "Amsterdam East", emoji: "⚓", bg: "#e3f2fd" },
-          { name: "Amsterdam North", emoji: "🏗️", bg: "#fff3e0" },
-          { name: "Amsterdam South", emoji: "🎭", bg: "#fce4ec" },
+          { name: "Amsterdam West", emoji: "🌿", bgClass: "tour-promo-img-west" },
+          { name: "Amsterdam East", emoji: "⚓", bgClass: "tour-promo-img-east" },
+          { name: "Amsterdam North", emoji: "🏗️", bgClass: "tour-promo-img-north" },
+          { name: "Amsterdam South", emoji: "🎭", bgClass: "tour-promo-img-south" },
         ].map((t) => (
           <div key={t.name} className="tour-promo-card">
-            <div className="tour-promo-img" style={{ background: t.bg }}>{t.emoji}</div>
+            <div className={`tour-promo-img ${t.bgClass}`}>{t.emoji}</div>
             <div className="tour-promo-info">
               <h4>{t.name}</h4>
               <p>Coming Soon</p>
@@ -104,7 +103,7 @@ export default function StopPage({ stop, stopIndex, onNav, onHome }) {
       </div>
 
       {/* Nav buttons */}
-      <div className="next-btn-container" style={{ display: "flex", justifyContent: stopIndex === 0 ? "flex-end" : "space-between", alignItems: "center" }}>
+      <div className={`next-btn-container ${stopIndex === 0 ? "first-stop" : ""}`}>
         {stopIndex > 0 && (
           <button className="prev-btn" onClick={() => onNav(stopIndex - 1)}>
             ← Previous

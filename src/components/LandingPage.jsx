@@ -12,12 +12,12 @@ export default function LandingPage({ onViewAll, onStopByStop }) {
       </div>
 
       <div className="route-card">
-        <div style={{ position: "relative" }}>
+        <div className="route-card-media">
            <div className="route-card-img-placeholder">
             <img
               src={cityCenterImages[0]}
               alt="Amsterdam city center aerial view"
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              className="route-card-image"
               loading="lazy"
             />
           </div>
