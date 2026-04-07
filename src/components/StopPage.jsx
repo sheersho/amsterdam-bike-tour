@@ -85,7 +85,7 @@ export default function StopPage({ stop, stopIndex, onNav, onHome }) {
 
       {/* Other Tours */}
       <div className="other-tours">
-        <h3>Explore Amsterdam with Bill's self-guided bike tours</h3>
+        <h3>Pim's self-guided bike tours</h3>
         {[
           { name: "Amsterdam West", emoji: "🌿", bgClass: "tour-promo-img-west" },
           { name: "Amsterdam East", emoji: "⚓", bgClass: "tour-promo-img-east" },

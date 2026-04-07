@@ -8,7 +8,7 @@ export default function LandingPage({ onViewAll, onStopByStop }) {
   return (
     <div>
       <div className="landing-hero">
-        <h1>Explore Amsterdam with our Self-Guided Bike Tours</h1>
+        <h1>Pim's Self-Guided Bike Tours</h1>
       </div>
 
       <div className="route-card">
