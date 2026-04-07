@@ -2,24 +2,23 @@ import React, { useState } from 'react';
 import AmsterdamSkyline from './AmsterdamSkyline';
 
 export default function LoginPage({ onLogin }) {
-  const [email, setEmail] = useState('');
+  const [emailId, setEmailId] = useState('');
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const normalizedEmail = email.trim().toLowerCase();
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const normalized = emailId.trim().toLowerCase();
 
-    if (!emailPattern.test(normalizedEmail)) {
-      setError('Enter a valid email address to continue.');
+    if (!normalized) {
+      setError('Enter your username to continue.');
       return;
     }
 
     try {
       setSubmitting(true);
       setError('');
-      await onLogin(normalizedEmail);
+      await onLogin(normalized);
     } catch (err) {
       setError(err.message || 'Unable to log in right now. Please try again.');
       setSubmitting(false);
@@ -35,18 +34,17 @@ export default function LoginPage({ onLogin }) {
 
       <div className="login-card">
         <h2>Log In</h2>
-        <p className="login-helper-text">Use the same approved email you used when booking.</p>
+        <p className="login-helper-text">Enter the approved username to access the tour.</p>
 
         <form className="login-form" onSubmit={handleSubmit}>
-          <label className="login-label" htmlFor="email">Email Address</label>
+          <label className="login-label" htmlFor="emailId">Username</label>
           <input
-            id="email"
-            type="email"
-            autoComplete="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            id="emailId"
+            type="text"
+            autoComplete="username"
+            value={emailId}
+            onChange={(e) => setEmailId(e.target.value)}
             className="login-input"
-            placeholder="you@example.com"
             required
           />
 

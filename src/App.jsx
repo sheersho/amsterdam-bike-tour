@@ -7,26 +7,25 @@ import AllStopsPage from './components/AllStopsPage';
 import StopPage from './components/StopPage';
 import LoginPage from './components/LoginPage';
 
-async function safeJson(response) {
-  const text = await response.text();
-  if (!text) return null;
-  try {
-    return JSON.parse(text);
-  } catch {
-    return null;
-  }
-}
-
 function clearAuthStorage() {
   localStorage.removeItem('tour-email');
   localStorage.removeItem('tour-token');
   localStorage.removeItem('tour-auth-expiry');
 }
 
+const SESSION_TTL_MS = 48 * 60 * 60 * 1000;
+
+function hasValidSession() {
+  const email = localStorage.getItem('tour-email');
+  const expiryAt = Number(localStorage.getItem('tour-auth-expiry') || 0);
+  const valid = email === 'pim' && expiryAt > Date.now();
+  if (!valid) clearAuthStorage();
+  return valid;
+}
+
 export default function App() {
   // pages: "login" | "landing" | "allStops" | "stop"
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isCheckingSession, setIsCheckingSession] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => hasValidSession());
   const [pendingRoute, setPendingRoute] = useState(null);
   const [page, setPage] = useState("landing");
   const [currentStop, setCurrentStop] = useState(0);
@@ -56,26 +55,14 @@ export default function App() {
     setPage("allStops");
   };
 
-  const handleLogin = async (email) => {
-    let response;
-    try {
-      response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
-    } catch {
-      throw new Error('Cannot reach auth server. Start it with `npm run server`.');
+  const handleLogin = async (emailId) => {
+    const normalized = String(emailId || '').trim().toLowerCase();
+    if (normalized !== 'pim') {
+      throw new Error('Access denied. Only `pim` can log in.');
     }
 
-    const data = await safeJson(response);
-    if (!response.ok || !data?.token) {
-      throw new Error(data?.error || 'Unable to log in. Check auth server and try again.');
-    }
-
-    localStorage.setItem('tour-token', data.token);
-    localStorage.setItem('tour-email', data.email);
-    localStorage.setItem('tour-auth-expiry', String(data.expiresAt || 0));
+    localStorage.setItem('tour-email', 'pim');
+    localStorage.setItem('tour-auth-expiry', String(Date.now() + SESSION_TTL_MS));
     setIsAuthenticated(true);
 
     if (pendingRoute?.page === "stop") {
@@ -110,56 +97,12 @@ export default function App() {
       return;
     }
 
-    const timer = window.setTimeout(() => {
+    const timeout = window.setTimeout(() => {
       handleLogout();
     }, msRemaining);
 
-    return () => window.clearTimeout(timer);
+    return () => window.clearTimeout(timeout);
   }, [isAuthenticated]);
-
-  useEffect(() => {
-    const token = localStorage.getItem('tour-token');
-    if (!token) {
-      clearAuthStorage();
-      setIsAuthenticated(false);
-      setIsCheckingSession(false);
-      return;
-    }
-
-    const verifySession = async () => {
-      try {
-        const response = await fetch('/api/auth/verify', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (!response.ok) throw new Error('Session invalid');
-        const data = await safeJson(response);
-        if (!data?.email) throw new Error('Invalid session payload');
-        if (data.expiresAt) {
-          localStorage.setItem('tour-auth-expiry', String(data.expiresAt));
-        }
-        if (data.email) {
-          localStorage.setItem('tour-email', data.email);
-        }
-        setIsAuthenticated(true);
-      } catch (err) {
-        clearAuthStorage();
-        setIsAuthenticated(false);
-      } finally {
-        setIsCheckingSession(false);
-      }
-    };
-
-    verifySession();
-  }, []);
-
-  if (isCheckingSession) {
-    return (
-      <div className="app auth-loading">
-        <div className="auth-loading-text">Checking access...</div>
-      </div>
-    );
-  }
 
   return (
     <div className="app">
