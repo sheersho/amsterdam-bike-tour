@@ -37,11 +37,11 @@ export default function AllStopsPage({ onSelectStop, onHome }) {
             <div style={{
               width: 44, height: 44,
               borderRadius: 10,
-              background: HERO_COLORS[i],
+              background: stop.image ? `url(${stop.image}) center/cover no-repeat` : HERO_COLORS[i],
               display: "flex", alignItems: "center", justifyContent: "center",
               fontSize: 22, flexShrink: 0,
             }}>
-              {HERO_EMOJI[i]}
+              {!stop.image && HERO_EMOJI[i]}
             </div>
             <div style={{ flex: 1 }}>
               <div style={{ fontWeight: 700, fontSize: 15, color: "#1a1a2e" }}>

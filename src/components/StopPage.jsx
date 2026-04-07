@@ -15,11 +15,15 @@ export default function StopPage({ stop, stopIndex, onNav, onHome }) {
       <div ref={topRef} />
 
       {/* Hero */}
-      <div className="stop-hero">
-        <div className="stop-hero-placeholder" style={{ background: HERO_COLORS[stopIndex] }}>
-          {HERO_EMOJI[stopIndex]}
-        </div>
-        <div className="stop-hero-gradient" />
+      <div className="stop-hero" style={{ position: "relative" }}>
+        {stop.image ? (
+          <img src={stop.image} alt={stop.name} style={{ width: "100%", height: "100%", objectFit: "cover", position: "absolute", top: 0, left: 0 }} />
+        ) : (
+          <div className="stop-hero-placeholder" style={{ background: HERO_COLORS[stopIndex] }}>
+            {HERO_EMOJI[stopIndex]}
+          </div>
+        )}
+        <div style={{ position: "absolute", inset: 0 }} />
       </div>
 
       {/* Toggle bar */}
