@@ -6,8 +6,7 @@ export default function AccessPage({
   token,
   onVerify,
   onResend,
-  purchaseUrl = 'https://toursandtravels.amsterdam',
-  supportEmail = 'info@toursandtravels.amsterdam',
+  supportEmail = 'sheersho.business@gmail.com',
 }) {
   const [status, setStatus] = useState(token ? 'verifying' : 'missing');
   const [error, setError] = useState('');
@@ -16,6 +15,10 @@ export default function AccessPage({
   const [successMessage, setSuccessMessage] = useState('');
   const [previewLink, setPreviewLink] = useState('');
   const requiresNewTour = error === TOUR_PURCHASE_REQUIRED_MESSAGE;
+
+  const handleComingSoon = () => {
+    window.alert('Coming soon.');
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -115,14 +118,13 @@ export default function AccessPage({
 
         {requiresNewTour && (
           <div className="buy-tour-actions inline-buy-tour-actions">
-            <a
+            <button
+              type="button"
               className="login-btn buy-tour-primary"
-              href={purchaseUrl}
-              target="_blank"
-              rel="noreferrer"
+              onClick={handleComingSoon}
             >
               Buy New Tour
-            </a>
+            </button>
             <a className="cta-btn cta-btn-outline buy-tour-secondary" href={`mailto:${supportEmail}`}>
               Contact Admin
             </a>

@@ -22,7 +22,6 @@ const LEGACY_TOUR_TOKEN_KEY = 'tour-token';
 const LEGACY_TOUR_EMAIL_KEY = 'tour-email';
 const LEGACY_TOUR_AUTH_EXPIRY_KEY = 'tour-auth-expiry';
 const TOUR_LAST_EMAIL_KEY = 'tour-last-email';
-const PURCHASE_URL = 'https://toursandtravels.amsterdam';
 
 function clearAuthStorage() {
   localStorage.removeItem(TOUR_TOKEN_KEY);
@@ -300,7 +299,6 @@ export default function App() {
           token={route.token}
           onVerify={handleVerifyAccess}
           onResend={handleRequestAccess}
-          purchaseUrl={PURCHASE_URL}
         />
       )}
 
@@ -312,7 +310,6 @@ export default function App() {
           subtitle="Sign up with your email and we’ll send a secure access code link to start your Amsterdam bike tour."
           helperText="We’ll email a one-tap access link that signs you in securely."
           buttonLabel="Sign Up"
-          purchaseUrl={PURCHASE_URL}
           initialError={authInlineError}
         />
       )}

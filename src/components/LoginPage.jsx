@@ -10,8 +10,7 @@ export default function LoginPage({
   subtitle = 'Enter your email and we’ll send a secure link that unlocks your tour for 48 hours.',
   helperText = 'Use the same email address you booked with.',
   buttonLabel = 'Get Access',
-  purchaseUrl = 'https://toursandtravels.amsterdam',
-  supportEmail = 'info@toursandtravels.amsterdam',
+  supportEmail = 'sheersho.business@gmail.com',
 }) {
   const [emailId, setEmailId] = useState(initialEmail);
   const [error, setError] = useState('');
@@ -19,6 +18,10 @@ export default function LoginPage({
   const [previewLink, setPreviewLink] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const requiresNewTour = error === TOUR_PURCHASE_REQUIRED_MESSAGE;
+
+  const handleComingSoon = () => {
+    window.alert('Coming soon.');
+  };
 
   useEffect(() => {
     setEmailId(initialEmail);
@@ -101,14 +104,13 @@ export default function LoginPage({
           <>
             <p className="login-error">{error}</p>
             <div className="buy-tour-actions inline-buy-tour-actions">
-              <a
+              <button
+                type="button"
                 className="login-btn buy-tour-primary"
-                href={purchaseUrl}
-                target="_blank"
-                rel="noreferrer"
+                onClick={handleComingSoon}
               >
                 Buy New Tour
-              </a>
+              </button>
               <a className="cta-btn cta-btn-outline buy-tour-secondary" href={`mailto:${supportEmail}`}>
                 Contact Admin
               </a>
