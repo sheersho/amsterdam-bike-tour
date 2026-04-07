@@ -4,11 +4,22 @@ import { STOPS, HERO_EMOJI } from '../data/tourdata';
 
 export default function StopPage({ stop, stopIndex, onNav, onHome }) {
   const [showMap, setShowMap] = useState(false);
+  const [showBackToTop, setShowBackToTop] = useState(false);
   const topRef = useRef(null);
 
   useEffect(() => {
     topRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [stopIndex]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 80);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <div>
@@ -118,9 +129,11 @@ export default function StopPage({ stop, stopIndex, onNav, onHome }) {
 
       <AmsterdamSkyline />
 
-      <button className="back-to-top" onClick={() => topRef.current?.scrollIntoView({ behavior: "smooth" })}>
-        ↑
-      </button>
+      {showBackToTop && (
+        <button className="back-to-top" onClick={() => topRef.current?.scrollIntoView({ behavior: "smooth" })}>
+          ↑
+        </button>
+      )}
     </div>
   );
 }
