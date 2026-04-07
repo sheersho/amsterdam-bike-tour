@@ -60,6 +60,10 @@ function normalizeAuthError(error) {
   throw error;
 }
 
+export function isPurchaseRequiredError(error) {
+  return String(error?.message || '') === TOUR_PURCHASE_REQUIRED_MESSAGE || error?.status === 403;
+}
+
 export async function requestMagicLink(email) {
   try {
     const response = await fetch(`${API_BASE_URL}/auth/send-link`, {

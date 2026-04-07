@@ -311,6 +311,52 @@ body {
   min-height: 220px;
 }
 
+.buy-tour-page {
+  background:
+    radial-gradient(circle at top right, rgba(248, 211, 168, 0.45), transparent 32%),
+    linear-gradient(180deg, #f8f5f6 0%, #fff9f1 100%);
+}
+
+.buy-tour-hero {
+  background:
+    linear-gradient(135deg, rgba(139, 26, 43, 0.96), rgba(82, 11, 22, 0.98)),
+    #8b1a2b;
+}
+
+.buy-tour-card {
+  border: 1px solid rgba(139, 26, 43, 0.08);
+}
+
+.buy-tour-actions {
+  margin-top: 18px;
+  display: grid;
+  gap: 12px;
+}
+
+.buy-tour-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.buy-tour-secondary {
+  width: 100%;
+}
+
+.buy-tour-support {
+  margin-top: 18px;
+  font-size: 14px;
+  color: #555;
+  line-height: 1.5;
+}
+
+.buy-tour-support a {
+  color: #8b1a2b;
+  font-weight: 700;
+  text-decoration: none;
+}
+
 /* ── All Stops Page ── */
 .all-stops-hero {
   padding-bottom: 18px;

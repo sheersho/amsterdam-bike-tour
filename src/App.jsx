@@ -7,9 +7,11 @@ import AllStopsPage from './components/AllStopsPage';
 import StopPage from './components/StopPage';
 import LoginPage from './components/LoginPage';
 import AccessPage from './components/AccessPage';
+import BuyNewTourPage from './components/BuyNewTourPage';
 import {
   fetchTourContent,
   fetchTourStatus,
+  isPurchaseRequiredError,
   normalizeEmail,
   requestMagicLink,
   verifyMagicToken,
@@ -20,6 +22,7 @@ const LEGACY_TOUR_TOKEN_KEY = 'tour-token';
 const LEGACY_TOUR_EMAIL_KEY = 'tour-email';
 const LEGACY_TOUR_AUTH_EXPIRY_KEY = 'tour-auth-expiry';
 const TOUR_LAST_EMAIL_KEY = 'tour-last-email';
+const BUY_NEW_TOUR_URL = 'https://toursandtravels.amsterdam';
 
 function clearAuthStorage() {
   localStorage.removeItem(TOUR_TOKEN_KEY);
@@ -56,6 +59,10 @@ function getRoute() {
 
   if (pathname === '/tour') {
     return { path: '/tour' };
+  }
+
+  if (pathname === '/buy-new-tour') {
+    return { path: '/buy-new-tour' };
   }
 
   return { path: '/' };
@@ -125,9 +132,9 @@ export default function App() {
           return;
         }
 
-        if (error.status === 403) {
+        if (isPurchaseRequiredError(error)) {
           expireSession(setAuthToken, setAuthState, setExpiredEmail);
-          updateLocation('/tour', { replace: true });
+          updateLocation('/buy-new-tour', { replace: true });
           return;
         }
 
@@ -159,6 +166,12 @@ export default function App() {
         if (error.status === 401) {
           expireSession(setAuthToken, setAuthState, setExpiredEmail);
           updateLocation('/tour', { replace: true });
+          return;
+        }
+
+        if (isPurchaseRequiredError(error)) {
+          expireSession(setAuthToken, setAuthState, setExpiredEmail);
+          updateLocation('/buy-new-tour', { replace: true });
           return;
         }
 
@@ -228,19 +241,35 @@ export default function App() {
   };
 
   const handleRequestAccess = async (email) => {
-    const response = await requestMagicLink(email);
-    saveLastEmail(email);
-    setExpiredEmail(normalizeEmail(email));
-    return response;
+    try {
+      const response = await requestMagicLink(email);
+      saveLastEmail(email);
+      setExpiredEmail(normalizeEmail(email));
+      return response;
+    } catch (error) {
+      if (isPurchaseRequiredError(error)) {
+        saveLastEmail(email);
+        setExpiredEmail(normalizeEmail(email));
+        updateLocation('/buy-new-tour');
+      }
+      throw error;
+    }
   };
 
   const handleVerifyAccess = async (token) => {
-    const response = await verifyMagicToken(token);
-    finishAuth({
-      email: response.email,
-      token,
-    });
-    return response;
+    try {
+      const response = await verifyMagicToken(token);
+      finishAuth({
+        email: response.email,
+        token,
+      });
+      return response;
+    } catch (error) {
+      if (isPurchaseRequiredError(error)) {
+        updateLocation('/buy-new-tour', { replace: true });
+      }
+      throw error;
+    }
   };
 
   const handleLogout = () => {
@@ -271,6 +300,16 @@ export default function App() {
           token={route.token}
           onVerify={handleVerifyAccess}
           onResend={handleRequestAccess}
+        />
+      )}
+
+      {route.path === '/buy-new-tour' && (
+        <BuyNewTourPage
+          purchaseUrl={BUY_NEW_TOUR_URL}
+          onGoHome={() => {
+            updateLocation('/', { replace: true });
+            window.scrollTo(0, 0);
+          }}
         />
       )}
 
