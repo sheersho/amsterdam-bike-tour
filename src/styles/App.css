@@ -122,7 +122,52 @@ body {
 
 .location-cta {
   width: 100%;
-  margin-top: 10px;
+  margin-top: 14px;
+  padding: 13px 16px;
+  border: 0;
+  border-radius: 14px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.28), transparent 28%),
+    linear-gradient(135deg, #244a60 0%, #2f6b77 48%, #8b1a2b 100%);
+  color: #fff;
+  text-align: left;
+  box-shadow: 0 14px 28px rgba(36, 74, 96, 0.18);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.location-cta:active {
+  transform: scale(0.985);
+}
+
+.location-cta-kicker {
+  display: inline-block;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.location-cta-title {
+  display: block;
+  margin-top: 9px;
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.location-cta-copy {
+  display: block;
+  margin-top: 6px;
+  max-width: 28ch;
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.88);
 }
 
 .cta-btn {
