@@ -271,6 +271,22 @@ body {
   font-size: 13px;
 }
 
+.login-success {
+  margin-top: 8px;
+  color: #1f7a43;
+  font-size: 13px;
+}
+
+.magic-link-preview {
+  display: inline-flex;
+  margin-top: 10px;
+  color: #8b1a2b;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .login-btn {
   margin-top: 12px;
   width: 100%;
@@ -289,6 +305,10 @@ body {
 .login-btn:disabled {
   opacity: 0.75;
   cursor: not-allowed;
+}
+
+.access-card {
+  min-height: 220px;
 }
 
 /* ── All Stops Page ── */

@@ -1,8 +1,8 @@
 import React, { useRef } from 'react';
 import AmsterdamSkyline from './AmsterdamSkyline';
-import { STOPS, HERO_EMOJI } from '../data/tourdata';
+import { HERO_EMOJI } from '../data/tourdata';
 
-export default function AllStopsPage({ onSelectStop, onHome }) {
+export default function AllStopsPage({ stops, onSelectStop, onHome }) {
   const topRef = useRef(null);
   return (
     <div>
@@ -16,7 +16,7 @@ export default function AllStopsPage({ onSelectStop, onHome }) {
       </div>
 
       <div className="all-stops-list">
-        {STOPS.map((stop, i) => (
+        {stops.map((stop, i) => (
           <div
             key={stop.id}
             onClick={() => onSelectStop(i)}

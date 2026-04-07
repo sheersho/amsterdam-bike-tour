@@ -1,10 +1,9 @@
 import React from 'react';
 import AmsterdamSkyline from './AmsterdamSkyline';
-import { FAQ } from '../data/tourdata';
 import { cityCenterImages } from '../data/images';
 
 
-export default function LandingPage({ onViewAll, onStopByStop }) {
+export default function LandingPage({ faq, onViewAll, onStopByStop }) {
   return (
     <div>
       <div className="landing-hero">
@@ -44,7 +43,7 @@ export default function LandingPage({ onViewAll, onStopByStop }) {
 
       <div className="faq-section">
         <h2 className="faq-title">Frequently Asked Questions</h2>
-        {FAQ.map((item, i) => (
+        {faq.map((item, i) => (
           <div key={i} className="faq-item">
             <div className="faq-q">{i + 1}. {item.q}</div>
             <div className="faq-a">

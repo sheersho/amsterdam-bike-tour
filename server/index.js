@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { FAQ, STOPS } from '../src/data/tourdata.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -11,6 +12,8 @@ const usersFilePath = path.join(__dirname, 'allowed-users.json');
 const PORT = Number(process.env.AUTH_PORT || 8787);
 const TOKEN_TTL_HOURS = Number(process.env.AUTH_TOKEN_TTL_HOURS || 48);
 const JWT_SECRET = process.env.AUTH_JWT_SECRET || 'dev-only-change-me';
+const APP_BASE_URL = (process.env.APP_BASE_URL || 'http://localhost:5173').replace(/\/+$/, '');
+const sessions = new Map();
 
 function normalizeEmail(email) {
   return String(email || '').trim().toLowerCase();
@@ -41,8 +44,12 @@ function base64urlDecode(value) {
   return Buffer.from(value, 'base64url').toString('utf8');
 }
 
-function signToken(email, expiresAt) {
-  const payload = JSON.stringify({ email, exp: expiresAt });
+function signToken(email, issuedAt, expiresAt) {
+  const payload = JSON.stringify({
+    email,
+    issued_at: issuedAt,
+    expires_at: expiresAt,
+  });
   const encodedPayload = base64urlEncode(payload);
   const signature = crypto.createHmac('sha256', JWT_SECRET).update(encodedPayload).digest('base64url');
   return `${encodedPayload}.${signature}`;
@@ -56,9 +63,13 @@ function verifyToken(token) {
 
   try {
     const payload = JSON.parse(base64urlDecode(encodedPayload));
-    if (!payload?.email || !payload?.exp) return null;
-    if (Number(payload.exp) <= Date.now()) return null;
-    return { email: normalizeEmail(payload.email), expiresAt: Number(payload.exp) };
+    if (!payload?.email || !payload?.issued_at || !payload?.expires_at) return null;
+    if (Number(payload.expires_at) <= Date.now()) return null;
+    return {
+      email: normalizeEmail(payload.email),
+      issuedAt: Number(payload.issued_at),
+      expiresAt: Number(payload.expires_at),
+    };
   } catch {
     return null;
   }
@@ -103,12 +114,14 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  const requestUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+
   if (req.method === 'OPTIONS') {
     sendJson(res, 200, { ok: true });
     return;
   }
 
-  if (req.method === 'POST' && req.url === '/api/auth/login') {
+  if (req.method === 'POST' && requestUrl.pathname === '/auth/send-link') {
     try {
       const body = await readJsonBody(req);
       const email = normalizeEmail(body.email);
@@ -124,9 +137,12 @@ const server = http.createServer(async (req, res) => {
         return;
       }
 
+      const issuedAt = Date.now();
       const expiresAt = Date.now() + TOKEN_TTL_HOURS * 60 * 60 * 1000;
-      const token = signToken(email, expiresAt);
-      sendJson(res, 200, { token, email, expiresAt });
+      const token = signToken(email, issuedAt, expiresAt);
+      sessions.set(token, { email, expiresAt });
+      const magicLink = `${APP_BASE_URL}/access?token=${token}`;
+      sendJson(res, 200, { ok: true, email, expiresAt, magicLink });
       return;
     } catch {
       sendJson(res, 400, { error: 'Invalid request body.' });
@@ -134,8 +150,8 @@ const server = http.createServer(async (req, res) => {
     }
   }
 
-  if (req.method === 'GET' && req.url === '/api/auth/verify') {
-    const token = getBearerToken(req);
+  if (req.method === 'GET' && requestUrl.pathname === '/auth/verify') {
+    const token = requestUrl.searchParams.get('token') || '';
     if (!token) {
       sendJson(res, 401, { error: 'Missing token.' });
       return;
@@ -147,12 +163,47 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
+    if (!sessions.has(token)) {
+      sendJson(res, 401, { error: 'Invalid or expired token.' });
+      return;
+    }
+
     if (!isEmailAllowed(payload.email)) {
       sendJson(res, 403, { error: 'Access revoked for this account.' });
       return;
     }
 
-    sendJson(res, 200, { email: payload.email, expiresAt: payload.expiresAt });
+    sendJson(res, 200, {
+      email: payload.email,
+      expiresAt: payload.expiresAt,
+      expiresInHours: Math.max(0, Math.ceil((payload.expiresAt - Date.now()) / (60 * 60 * 1000))),
+    });
+    return;
+  }
+
+  if (req.method === 'GET' && requestUrl.pathname === '/tour/content') {
+    const token = getBearerToken(req);
+    if (!token) {
+      sendJson(res, 401, { error: 'Missing token.' });
+      return;
+    }
+
+    const payload = verifyToken(token);
+    if (!payload || !sessions.has(token)) {
+      sendJson(res, 401, { error: 'Invalid or expired token.' });
+      return;
+    }
+
+    if (!isEmailAllowed(payload.email)) {
+      sendJson(res, 403, { error: 'Access revoked for this account.' });
+      return;
+    }
+
+    sendJson(res, 200, {
+      email: payload.email,
+      waypoints: STOPS,
+      faq: FAQ,
+    });
     return;
   }
 

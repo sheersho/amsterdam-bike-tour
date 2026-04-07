@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import AmsterdamSkyline from './AmsterdamSkyline';
-import { STOPS, HERO_EMOJI } from '../data/tourdata';
+import { HERO_EMOJI } from '../data/tourdata';
 
-export default function StopPage({ stop, stopIndex, onNav, onHome }) {
+export default function StopPage({ stop, stopIndex, stops, onNav, onHome }) {
   const [showMap, setShowMap] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const topRef = useRef(null);
@@ -51,7 +51,7 @@ export default function StopPage({ stop, stopIndex, onNav, onHome }) {
       <div className="stops-nav">
         <h3>Bike Stops</h3>
         <div className="stops-grid">
-          {STOPS.map((s, i) => (
+          {stops.map((s, i) => (
             <div
               key={s.id}
               className={`stops-grid-item ${i === stopIndex ? "current" : ""}`}
@@ -116,7 +116,7 @@ export default function StopPage({ stop, stopIndex, onNav, onHome }) {
             ← Previous
           </button>
         )}
-        {stopIndex < STOPS.length - 1 ? (
+        {stopIndex < stops.length - 1 ? (
           <button className="next-btn" onClick={() => onNav(stopIndex + 1)}>
             Next Location →
           </button>
