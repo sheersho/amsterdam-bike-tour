@@ -1,4 +1,5 @@
 const PROD_API_BASE_URL = 'https://bike-tour-backend.billsbiketour.workers.dev';
+export const TOUR_PURCHASE_REQUIRED_MESSAGE = 'Your previous tour access has expired. Please buy a new tour to continue.';
 
 function getDefaultApiBaseUrl() {
   if (typeof window !== 'undefined' && ['localhost', '127.0.0.1'].includes(window.location.hostname)) {
@@ -42,6 +43,23 @@ function withNetworkMessage(error, fallbackMessage) {
   throw error;
 }
 
+function normalizeAuthError(error) {
+  const message = String(error?.message || '');
+  const requiresNewTour = error?.status === 403
+    || /not authorized for this tour/i.test(message)
+    || /access revoked/i.test(message)
+    || /session expired/i.test(message)
+    || /buy a new tour/i.test(message);
+
+  if (requiresNewTour) {
+    const normalized = new Error(TOUR_PURCHASE_REQUIRED_MESSAGE);
+    normalized.status = error?.status;
+    throw normalized;
+  }
+
+  throw error;
+}
+
 export async function requestMagicLink(email) {
   try {
     const response = await fetch(`${API_BASE_URL}/auth/send-link`, {
@@ -56,6 +74,7 @@ export async function requestMagicLink(email) {
 
     return parseJson(response);
   } catch (error) {
+    normalizeAuthError(error);
     withNetworkMessage(
       error,
       'Unable to reach the access service right now. Please check your connection and try again.',
@@ -77,6 +96,7 @@ export async function verifyMagicToken(token) {
 
     return parseJson(response);
   } catch (error) {
+    normalizeAuthError(error);
     withNetworkMessage(
       error,
       'Unable to verify your access link right now. Please try again in a moment.',

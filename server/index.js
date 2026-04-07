@@ -14,6 +14,7 @@ const TOKEN_TTL_HOURS = Number(process.env.AUTH_TOKEN_TTL_HOURS || 48);
 const JWT_SECRET = process.env.AUTH_JWT_SECRET || 'dev-only-change-me';
 const APP_BASE_URL = (process.env.APP_BASE_URL || 'http://localhost:5173').replace(/\/+$/, '');
 const sessions = new Map();
+const TOUR_PURCHASE_REQUIRED_MESSAGE = 'Your previous tour access has expired. Please buy a new tour to continue.';
 
 function normalizeEmail(email) {
   return String(email || '').trim().toLowerCase();
@@ -143,7 +144,7 @@ const server = http.createServer(async (req, res) => {
       }
 
       if (!isEmailAllowed(email)) {
-        sendJson(res, 403, { error: 'This account is not authorized for this tour.' });
+        sendJson(res, 403, { error: TOUR_PURCHASE_REQUIRED_MESSAGE });
         return;
       }
 
@@ -179,7 +180,7 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (!isEmailAllowed(payload.email)) {
-      sendJson(res, 403, { error: 'Access revoked for this account.' });
+      sendJson(res, 403, { error: TOUR_PURCHASE_REQUIRED_MESSAGE });
       return;
     }
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import AmsterdamSkyline from './AmsterdamSkyline';
+import { TOUR_PURCHASE_REQUIRED_MESSAGE } from '../lib/api';
 
 export default function AccessPage({ token, onVerify, onResend }) {
   const [status, setStatus] = useState(token ? 'verifying' : 'missing');
@@ -8,6 +9,7 @@ export default function AccessPage({ token, onVerify, onResend }) {
   const [submitting, setSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [previewLink, setPreviewLink] = useState('');
+  const requiresNewTour = error === TOUR_PURCHASE_REQUIRED_MESSAGE;
 
   useEffect(() => {
     let cancelled = false;
@@ -80,11 +82,19 @@ export default function AccessPage({ token, onVerify, onResend }) {
 
         {status !== 'verifying' && (
           <>
-            <h2>{status === 'success' ? 'Access Confirmed' : 'Need A Fresh Link?'}</h2>
+            <h2>
+              {status === 'success'
+                ? 'Access Confirmed'
+                : requiresNewTour
+                  ? 'Buy A New Tour'
+                  : 'Need A Fresh Link?'}
+            </h2>
             <p className="login-helper-text">
               {status === 'success'
                 ? 'Redirecting you into the tour now.'
-                : 'This link can no longer be used. Enter your email below and we’ll send a new one.'}
+                : requiresNewTour
+                  ? 'This tour session has expired and can no longer be restored from this link.'
+                  : 'This link can no longer be used. Enter your email below and we’ll send a new one.'}
             </p>
           </>
         )}
@@ -97,7 +107,7 @@ export default function AccessPage({ token, onVerify, onResend }) {
           </a>
         )}
 
-        {status !== 'verifying' && status !== 'success' && (
+        {status !== 'verifying' && status !== 'success' && !requiresNewTour && (
           <form className="login-form" onSubmit={handleResend}>
             <label className="login-label" htmlFor="resendEmail">Email</label>
             <input
