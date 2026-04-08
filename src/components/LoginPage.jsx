@@ -59,6 +59,14 @@ export default function LoginPage({
       <div className="signup-glow" />
 
       <div className="signup-content">
+        <div className="signup-corner-accent" aria-hidden="true">
+          <div className="signup-corner-flag">
+            <span />
+            <span />
+            <span />
+          </div>
+          <div className="signup-corner-bike">🗺️</div>
+        </div>
         <div className="signup-badge">Early Access - Amsterdam City Center Tour</div>
         <h1 className="signup-title">
           Ride <em>smarter.</em>

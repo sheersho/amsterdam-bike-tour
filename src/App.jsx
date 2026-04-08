@@ -113,6 +113,10 @@ export default function App() {
   const feedbackLink = "https://forms.gle/2xmXFyHcSLPrvoBJA";
   const isAuthenticated = authState === 'authenticated' && Boolean(authToken);
   const canAccessTour = isAuthenticated || isDevBypass;
+  const currentYear = new Date().getFullYear();
+  const copyrightLabel = currentYear > 2026
+    ? `© Meeus Consulting 2026-${currentYear}`
+    : '© Meeus Consulting 2026';
 
   useEffect(() => {
     const handleRouteChange = () => setRoute(getRoute());
@@ -454,6 +458,11 @@ export default function App() {
           </div>
         </div>
       )}
+
+      <footer className="app-footer">
+        <p>{copyrightLabel}</p>
+        <p className="app-footer-love">Made with love in the Netherlands 🇳🇱</p>
+      </footer>
     </div>
   );
 }
