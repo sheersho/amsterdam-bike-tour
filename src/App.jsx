@@ -105,6 +105,7 @@ export default function App() {
   const [contentState, setContentState] = useState({ status: 'idle', error: '' });
   const [contentReloadCount, setContentReloadCount] = useState(0);
   const [authInlineError, setAuthInlineError] = useState('');
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
   const feedbackLink = "https://forms.gle/2xmXFyHcSLPrvoBJA";
   const isAuthenticated = authState === 'authenticated' && Boolean(authToken);
 
@@ -239,6 +240,7 @@ export default function App() {
     setAuthState('authenticated');
     setExpiredEmail('');
     setAuthInlineError('');
+    setShowWelcomeModal(true);
     updateLocation('/tour', { replace: true });
 
     if (pendingRoute?.page === "stop") {
@@ -285,6 +287,7 @@ export default function App() {
     setAuthToken('');
     setAuthState('anonymous');
     setAuthInlineError('');
+    setShowWelcomeModal(false);
     setPendingRoute(null);
     setPage("landing");
     updateLocation('/', { replace: true });
@@ -408,6 +411,28 @@ export default function App() {
         <button className="floating-logout-btn" onClick={handleLogout}>
           Log Out
         </button>
+      )}
+
+      {showWelcomeModal && (
+        <div className="welcome-modal-backdrop" role="presentation">
+          <div
+            className="welcome-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="welcome-modal-title"
+          >
+            <div className="welcome-modal-tick" aria-hidden="true">✓</div>
+            <h2 id="welcome-modal-title">Thanks for your purchase</h2>
+            <p>You can now start the tour.</p>
+            <button
+              type="button"
+              className="login-btn welcome-modal-btn"
+              onClick={() => setShowWelcomeModal(false)}
+            >
+              Start Tour
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

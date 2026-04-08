@@ -32,6 +32,59 @@ body {
   font-weight: 700;
 }
 
+.welcome-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(20, 16, 24, 0.56);
+}
+
+.welcome-modal {
+  width: min(100%, 360px);
+  padding: 28px 24px 24px;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 24px 48px rgba(17, 24, 39, 0.24);
+  text-align: center;
+}
+
+.welcome-modal-tick {
+  width: 68px;
+  height: 68px;
+  margin: 0 auto 16px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #28b463, #12924a);
+  color: #fff;
+  font-size: 36px;
+  font-weight: 700;
+  box-shadow: 0 14px 24px rgba(18, 146, 74, 0.28);
+}
+
+.welcome-modal h2 {
+  font-family: 'Merriweather', Georgia, serif;
+  color: #1a1a2e;
+  font-size: 24px;
+  line-height: 1.25;
+}
+
+.welcome-modal p {
+  margin-top: 10px;
+  color: #555;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.welcome-modal-btn {
+  margin-top: 18px;
+}
+
 /* ── Landing Page ── */
 .landing-hero {
   background: #8b1a2b;
