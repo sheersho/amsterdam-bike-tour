@@ -376,7 +376,7 @@ export default function App() {
 
       {route.path === '/tour' && canAccessTour && contentState.status === 'error' && (
         <div className="login-page">
-          <div className="landing-hero login-hero">
+          <div className="landing-hero login-hero page-header">
             <h1>Tour Unavailable</h1>
             <p className="login-subtitle">We couldn&apos;t load your tour content right now.</p>
           </div>

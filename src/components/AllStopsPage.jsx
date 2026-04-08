@@ -7,7 +7,7 @@ export default function AllStopsPage({ stops, onSelectStop, onHome }) {
   return (
     <div>
       <div ref={topRef} />
-      <div className="landing-hero all-stops-hero">
+      <div className="landing-hero all-stops-hero page-header">
         <div className="all-stops-header">
           <button className="all-stops-back-btn" onClick={onHome}>←</button>
           <h1 className="all-stops-title">All Stops</h1>

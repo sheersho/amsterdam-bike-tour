@@ -116,7 +116,7 @@ export default function NearestStopPage({ stops, onBack }) {
 
   return (
     <div className="login-page nearest-stop-page">
-      <div className="landing-hero login-hero nearest-stop-hero">
+      <div className="landing-hero login-hero nearest-stop-hero page-header">
         <h1>Find Your Best Starting Point</h1>
         <p className="login-subtitle">
           We&apos;ll compare your location with Central Station, Anne Frank House, and Skinny Bridge,

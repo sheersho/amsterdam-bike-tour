@@ -68,7 +68,7 @@ export default function AccessPage({
 
   return (
     <div className="login-page">
-      <div className="landing-hero login-hero">
+      <div className="landing-hero login-hero page-header">
         <h1>Checking Your Access</h1>
         <p className="login-subtitle">
           We&apos;re validating your magic link and getting your Amsterdam bike tour ready.

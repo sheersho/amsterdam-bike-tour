@@ -5,7 +5,7 @@ import { cityCenterImages } from '../data/images';
 export default function LandingPage({ faq, onViewAll, onStopByStop, onFindNearestStart }) {
   return (
     <div>
-      <div className="landing-hero">
+      <div className="landing-hero page-header">
         <h1>Bill's Bike Tour</h1>
         <p className="landing-subtitle">Amsterdam</p>
       </div>

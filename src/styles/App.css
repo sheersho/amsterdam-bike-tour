@@ -20,6 +20,48 @@ body {
   position: relative;
 }
 
+.page-header {
+  --page-header-bg:
+    radial-gradient(circle at 14% 18%, rgba(255, 255, 255, 0.18), transparent 34%),
+    radial-gradient(circle at 80% 78%, rgba(28, 7, 12, 0.28), transparent 42%),
+    linear-gradient(145deg, #a52437 0%, #811728 48%, #5f101e 100%);
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  isolation: isolate;
+  border-radius: 0 0 18px 18px;
+  overflow: hidden;
+  background: var(--page-header-bg);
+  outline: 1px dashed rgba(255, 244, 230, 0.62);
+  outline-offset: -7px;
+  box-shadow: 0 1px 0 rgba(17, 24, 39, 0.1), 0 12px 24px rgba(17, 24, 39, 0.12);
+}
+
+.page-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(24deg, rgba(255, 255, 255, 0.045) 0 1px, rgba(0, 0, 0, 0.04) 1px 3px),
+    repeating-linear-gradient(-21deg, rgba(0, 0, 0, 0.05) 0 2px, rgba(255, 255, 255, 0.02) 2px 4px);
+  opacity: 0.42;
+}
+
+.page-header::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 24px;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(17, 24, 39, 0), rgba(17, 24, 39, 0.14));
+}
+
+.page-header > * {
+  position: relative;
+  z-index: 1;
+}
+
 .auth-loading {
   display: flex;
   align-items: center;
@@ -87,7 +129,7 @@ body {
 
 /* ── Landing Page ── */
 .landing-hero {
-  background: #8b1a2b;
+  background: var(--page-header-bg, #8b1a2b);
   padding: 20px 12px;
 }
 
@@ -322,7 +364,7 @@ body {
   min-height: 100vh;
   background: #f8f5f6;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 .login-hero {
@@ -642,9 +684,7 @@ body {
 }
 
 .nearest-stop-hero {
-  background:
-    linear-gradient(135deg, rgba(36, 74, 96, 0.98), rgba(15, 39, 56, 0.96)),
-    #244a60;
+  background: var(--page-header-bg, #8b1a2b);
 }
 
 .nearest-stop-card {
@@ -930,6 +970,76 @@ body {
   font-weight: 600;
 }
 
+.audio-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(12, 16, 24, 0.58);
+  backdrop-filter: blur(3px);
+}
+
+.audio-modal {
+  position: relative;
+  width: min(100%, 380px);
+  border-radius: 18px;
+  padding: 18px 16px 16px;
+  background: linear-gradient(175deg, #fff8f7, #fff);
+  box-shadow: 0 18px 36px rgba(17, 24, 39, 0.28);
+}
+
+.audio-modal-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(12, 18, 28, 0.08);
+  color: #3a3a3a;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.audio-modal-kicker {
+  margin-top: 2px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #8b1a2b;
+}
+
+.audio-modal h3 {
+  margin-top: 4px;
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 22px;
+  line-height: 1.25;
+  color: #1a1a2e;
+}
+
+.audio-modal-subtitle {
+  margin-top: 5px;
+  font-size: 13px;
+  color: #666;
+}
+
+.audio-modal-player {
+  margin-top: 14px;
+  width: 100%;
+}
+
+.audio-modal-error {
+  margin-top: 10px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #a71f34;
+}
+
 .stops-nav {
   padding: 20px 16px;
   background: #fff;
@@ -958,6 +1068,7 @@ body {
   display: flex;
   align-items: baseline;
   gap: 4px;
+  position: relative;
 }
 
 .stops-grid-item:hover,
@@ -978,6 +1089,35 @@ body {
 .stops-grid-item .sname {
   text-decoration: underline;
   text-underline-offset: 2px;
+}
+
+.current-tooltip {
+  position: absolute;
+  top: 50%;
+  left: calc(100% - 4vh);
+  transform: translateY(-50%);
+  z-index: 2;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(34, 153, 84, 0.96);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  box-shadow: 0 6px 14px rgba(20, 96, 53, 0.26);
+}
+
+.current-tooltip-tick {
+  min-width: 20px;
+  min-height: 20px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
 }
 
 .narrative-section {

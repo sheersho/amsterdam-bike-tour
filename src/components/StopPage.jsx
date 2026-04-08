@@ -4,11 +4,16 @@ import { HERO_EMOJI } from '../data/tourdata';
 
 export default function StopPage({ stop, stopIndex, stops, onNav, onHome }) {
   const [showMap, setShowMap] = useState(false);
+  const [isAudioModalOpen, setIsAudioModalOpen] = useState(false);
+  const [audioLoadError, setAudioLoadError] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const topRef = useRef(null);
+  const audioSrc = stop.audio || `/audio/stops/stop-${stop.id}.mp3`;
 
   useEffect(() => {
     topRef.current?.scrollIntoView({ behavior: "smooth" });
+    setIsAudioModalOpen(false);
+    setAudioLoadError(false);
   }, [stopIndex]);
 
   useEffect(() => {
@@ -20,6 +25,22 @@ export default function StopPage({ stop, stopIndex, stops, onNav, onHome }) {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") setIsAudioModalOpen(false);
+    };
+
+    if (isAudioModalOpen) {
+      document.body.style.overflow = "hidden";
+      window.addEventListener("keydown", onKeyDown);
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [isAudioModalOpen]);
 
   return (
     <div>
@@ -39,10 +60,23 @@ export default function StopPage({ stop, stopIndex, stops, onNav, onHome }) {
 
       {/* Toggle bar */}
       <div className="toggle-bar">
-        <button className={`toggle-btn ${!showMap ? "active" : ""}`} onClick={() => setShowMap(false)}>
+        <button
+          className={`toggle-btn ${isAudioModalOpen ? "active" : ""}`}
+          onClick={() => {
+            setShowMap(false);
+            setAudioLoadError(false);
+            setIsAudioModalOpen(true);
+          }}
+        >
           🎧 Audio
         </button>
-        <button className={`toggle-btn ${showMap ? "active" : ""}`} onClick={() => setShowMap(true)}>
+        <button
+          className={`toggle-btn ${showMap ? "active" : ""}`}
+          onClick={() => {
+            setIsAudioModalOpen(false);
+            setShowMap(true);
+          }}
+        >
           📍 View Map
         </button>
       </div>
@@ -59,6 +93,11 @@ export default function StopPage({ stop, stopIndex, stops, onNav, onHome }) {
             >
               <span className="num">{i + 1}.</span>
               <span className="sname">{s.name}</span>
+              {i === stopIndex && (
+                <span className="current-tooltip current-tooltip-tick" role="status" aria-label="Current stop">
+                  ✓
+                </span>
+              )}
             </div>
           ))}
         </div>
@@ -128,6 +167,50 @@ export default function StopPage({ stop, stopIndex, stops, onNav, onHome }) {
       </div>
 
       <AmsterdamSkyline />
+
+      {isAudioModalOpen && (
+        <div
+          className="audio-modal-backdrop"
+          role="presentation"
+          onClick={() => setIsAudioModalOpen(false)}
+        >
+          <div
+            className="audio-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="audio-modal-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="audio-modal-close"
+              aria-label="Close audio player"
+              onClick={() => setIsAudioModalOpen(false)}
+            >
+              ✕
+            </button>
+            <p className="audio-modal-kicker">Stop {stop.id}</p>
+            <h3 id="audio-modal-title">{stop.name}</h3>
+            <p className="audio-modal-subtitle">Audio narration</p>
+            <audio
+              key={audioSrc}
+              className="audio-modal-player"
+              controls
+              preload="none"
+              autoPlay
+              onError={() => setAudioLoadError(true)}
+            >
+              <source src={audioSrc} type="audio/mpeg" />
+              Your browser does not support audio playback.
+            </audio>
+            {audioLoadError && (
+              <p className="audio-modal-error">
+                Audio file not found for this stop yet. Add an MP3 at <code>{audioSrc}</code>.
+              </p>
+            )}
+          </div>
+        </div>
+      )}
 
       {showBackToTop && (
         <button className="back-to-top" onClick={() => topRef.current?.scrollIntoView({ behavior: "smooth" })}>
