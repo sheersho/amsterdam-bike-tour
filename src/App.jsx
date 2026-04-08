@@ -227,6 +227,9 @@ export default function App() {
 
     setCurrentStop(i);
     setPage("stop");
+    if (route.path !== '/tour') {
+      updateLocation('/tour');
+    }
     window.scrollTo(0, 0);
   };
 
@@ -239,6 +242,10 @@ export default function App() {
     }
 
     setPage("allStops");
+    if (route.path !== '/tour') {
+      updateLocation('/tour');
+    }
+    window.scrollTo(0, 0);
   };
 
   const goToNearestStart = () => {
