@@ -104,6 +104,16 @@ body {
   
 }
 
+.landing-subtitle {
+  margin-top: 4px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .route-card {
   margin: 20px 16px 0;
   border-radius: 12px;
