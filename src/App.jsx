@@ -50,22 +50,25 @@ function readStoredToken() {
 
 function getRoute() {
   const pathname = window.location.pathname.replace(/\/+$/, '') || '/';
+  const searchParams = new URLSearchParams(window.location.search);
+  const authOff = searchParams.get('auth') === 'off';
   if (pathname === '/access') {
     return {
       path: '/access',
       token: new URLSearchParams(window.location.search).get('token') || '',
+      authOff,
     };
   }
 
   if (pathname === '/tour') {
-    return { path: '/tour' };
+    return { path: '/tour', authOff };
   }
 
   if (pathname === '/nearest-stop') {
-    return { path: '/nearest-stop' };
+    return { path: '/nearest-stop', authOff };
   }
 
-  return { path: '/' };
+  return { path: '/', authOff };
 }
 
 function updateLocation(path, { replace = false } = {}) {
@@ -95,6 +98,7 @@ function expireSession(setAuthToken, setAuthState, setExpiredEmail, email) {
 
 export default function App() {
   const [route, setRoute] = useState(() => getRoute());
+  const isDevBypass = isLocalDev() && !route.authOff;
   const [authToken, setAuthToken] = useState(() => readStoredToken());
   const [authState, setAuthState] = useState(() => (readStoredToken() ? 'checking' : 'anonymous'));
   const [expiredEmail, setExpiredEmail] = useState(() => readLastEmail());
@@ -108,6 +112,7 @@ export default function App() {
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
   const feedbackLink = "https://forms.gle/2xmXFyHcSLPrvoBJA";
   const isAuthenticated = authState === 'authenticated' && Boolean(authToken);
+  const canAccessTour = isAuthenticated || isDevBypass;
 
   useEffect(() => {
     const handleRouteChange = () => setRoute(getRoute());
@@ -156,11 +161,19 @@ export default function App() {
   }, [authToken]);
 
   useEffect(() => {
-    if (!isAuthenticated || authState !== 'authenticated' || route.path !== '/tour') return;
+    if (route.path !== '/tour') return;
+    if (!canAccessTour) return;
+    if (!isDevBypass && authState !== 'authenticated') return;
 
     let cancelled = false;
 
     async function loadTour() {
+      if (isDevBypass && !authToken) {
+        setTourContent({ stops: STOPS, faq: FAQ });
+        setContentState({ status: 'ready', error: '' });
+        return;
+      }
+
       try {
         setContentState({ status: 'loading', error: '' });
         const payload = await fetchTourContent(authToken);
@@ -202,10 +215,10 @@ export default function App() {
     return () => {
       cancelled = true;
     };
-  }, [authState, authToken, contentReloadCount, isAuthenticated, route.path]);
+  }, [authState, authToken, canAccessTour, contentReloadCount, isDevBypass, route.path]);
 
   const goToStop = (i) => {
-    if (!isAuthenticated) {
+    if (!canAccessTour) {
       setPendingRoute({ page: "stop", stopIndex: i });
       updateLocation('/tour');
       window.scrollTo(0, 0);
@@ -218,7 +231,7 @@ export default function App() {
   };
 
   const goToAllStops = () => {
-    if (!isAuthenticated) {
+    if (!canAccessTour) {
       setPendingRoute({ page: "allStops" });
       updateLocation('/tour');
       window.scrollTo(0, 0);
@@ -326,7 +339,7 @@ export default function App() {
         />
       )}
 
-      {route.path === '/tour' && !isAuthenticated && (
+      {route.path === '/tour' && !canAccessTour && (
         <LoginPage
           onRequestAccess={handleRequestAccess}
           initialEmail={expiredEmail}
@@ -338,19 +351,19 @@ export default function App() {
         />
       )}
 
-      {route.path === '/tour' && authState === 'checking' && (
+      {route.path === '/tour' && !isDevBypass && authState === 'checking' && (
         <div className="auth-loading">
           <p className="auth-loading-text">Checking your access...</p>
         </div>
       )}
 
-      {route.path === '/tour' && isAuthenticated && contentState.status === 'loading' && (
+      {route.path === '/tour' && canAccessTour && contentState.status === 'loading' && (
         <div className="auth-loading">
           <p className="auth-loading-text">Loading your tour...</p>
         </div>
       )}
 
-      {route.path === '/tour' && isAuthenticated && contentState.status === 'error' && (
+      {route.path === '/tour' && canAccessTour && contentState.status === 'error' && (
         <div className="login-page">
           <div className="landing-hero login-hero">
             <h1>Tour Unavailable</h1>
@@ -372,7 +385,7 @@ export default function App() {
         </div>
       )}
 
-      {route.path === '/tour' && isAuthenticated && contentState.status === 'ready' && page === "landing" && (
+      {route.path === '/tour' && canAccessTour && contentState.status === 'ready' && page === "landing" && (
         <LandingPage
           faq={faq}
           onViewAll={goToAllStops}
@@ -381,7 +394,7 @@ export default function App() {
         />
       )}
 
-      {route.path === '/tour' && isAuthenticated && contentState.status === 'ready' && page === "allStops" && (
+      {route.path === '/tour' && canAccessTour && contentState.status === 'ready' && page === "allStops" && (
         <AllStopsPage
           stops={stops}
           onSelectStop={goToStop}
@@ -389,7 +402,7 @@ export default function App() {
         />
       )}
 
-      {route.path === '/tour' && isAuthenticated && contentState.status === 'ready' && page === "stop" && (
+      {route.path === '/tour' && canAccessTour && contentState.status === 'ready' && page === "stop" && (
         <StopPage
           stops={stops}
           stop={stops[currentStop]}
