@@ -695,13 +695,19 @@ body {
 }
 
 .all-stops-header {
-  display: flex;
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
   align-items: center;
-  gap: 12px;
+  justify-items: center;
   margin-bottom: 12px;
 }
 
 .all-stops-back-btn {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
   background: none;
   border: none;
   color: #fff;
@@ -712,6 +718,7 @@ body {
 
 .all-stops-title {
   font-size: 22px;
+  text-align: center;
 }
 
 .all-stops-subtitle {
