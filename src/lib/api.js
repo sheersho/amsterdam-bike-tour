@@ -73,7 +73,9 @@ export async function requestMagicLink(email) {
     });
 
     if (!response.ok) {
-      throw new Error(await readError(response, 'Unable to send your access link right now.'));
+      const error = new Error(await readError(response, 'Unable to send your access link right now.'));
+      error.status = response.status;
+      throw error;
     }
 
     return parseJson(response);

@@ -41,11 +41,7 @@ export default function LoginPage({
       setError('');
       const response = await onRequestAccess(normalized);
       setPreviewLink(response?.magicLink || '');
-      setSuccessMessage(
-        response?.magicLink
-          ? 'Your link is ready. In local development, you can open the preview link below.'
-          : 'Check your inbox for your magic link.',
-      );
+      setSuccessMessage(response?.message || '');
     } catch (err) {
       setError(err.message || 'Unable to send your access link right now. Please try again.');
     } finally {

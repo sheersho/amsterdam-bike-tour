@@ -53,11 +53,7 @@ export default function AccessPage({
       setError('');
       const response = await onResend(email);
       setPreviewLink(response?.magicLink || '');
-      setSuccessMessage(
-        response?.magicLink
-          ? 'New access link created. In local development, you can open the preview link below.'
-          : 'A fresh access link is on its way to your inbox.',
-      );
+      setSuccessMessage(response?.message || '');
       setStatus('resent');
     } catch (err) {
       setError(err.message || 'Unable to resend your link right now.');
