@@ -54,47 +54,74 @@ export default function LoginPage({
   };
 
   return (
-    <div className="login-page">
-      <div className="landing-hero login-hero">
-        <h1>Amsterdam Bike Tour</h1>
-        <p className="login-subtitle">{subtitle}</p>
-      </div>
+    <div className="login-page signup-page">
+      <div className="signup-bg-grid" />
+      <div className="signup-glow" />
 
-      <div className="login-card">
-        <h2>{title}</h2>
-        <p className="login-helper-text">{helperText}</p>
+      <div className="signup-content">
+        <div className="signup-badge">Early Access - Amsterdam City Center Tour</div>
+        <h1 className="signup-title">
+          Ride <em>smarter.</em>
+          <br />
+          Start here.
+        </h1>
+        <p className="signup-copy">{subtitle}</p>
 
-        <form className="login-form" onSubmit={handleSubmit}>
-          <label className="login-label" htmlFor="emailId">Email</label>
-          <input
-            id="emailId"
-            type="email"
-            autoComplete="email"
-            value={emailId}
-            onChange={(e) => setEmailId(e.target.value)}
-            className="login-input"
-            placeholder="you@example.com"
-            required
-          />
+        <div className="login-card signup-card">
+          <h2>{title}</h2>
+          <p className="login-helper-text">{helperText}</p>
 
-          {error && <p className="login-error">{error}</p>}
-          {requiresNewTour && (
-            <p className="login-support-note">
-              This email appears to have an expired session. Please contact admin at{' '}
-              <a href={`mailto:${supportEmail}`}>{supportEmail}</a>.
-            </p>
-          )}
-          {successMessage && <p className="login-success">{successMessage}</p>}
-          {previewLink && (
-            <a className="magic-link-preview" href={previewLink}>
-              Open preview access link
-            </a>
-          )}
+          <form className="login-form signup-form" onSubmit={handleSubmit}>
+            <label className="login-label" htmlFor="emailId">Email</label>
+            <div className="signup-form-row">
+              <input
+                id="emailId"
+                type="email"
+                autoComplete="email"
+                value={emailId}
+                onChange={(e) => setEmailId(e.target.value)}
+                className="login-input signup-input"
+                placeholder="Enter your email address"
+                required
+              />
 
-          <button type="submit" className="login-btn" disabled={submitting}>
-            {submitting ? 'Sending...' : buttonLabel}
-          </button>
-        </form>
+              <button type="submit" className="login-btn signup-btn" disabled={submitting}>
+                {submitting ? 'Sending...' : buttonLabel}
+              </button>
+            </div>
+
+            {error && <p className="login-error">{error}</p>}
+            {requiresNewTour && (
+              <p className="login-support-note">
+                This email appears to have an expired session. Please contact admin at{' '}
+                <a href={`mailto:${supportEmail}`}>{supportEmail}</a>.
+              </p>
+            )}
+            {successMessage && <p className="login-success">{successMessage}</p>}
+            {previewLink && (
+              <a className="magic-link-preview" href={previewLink}>
+                Open preview access link
+              </a>
+            )}
+          </form>
+
+          <div className="signup-note">No app download · Works in your browser · 48-hour access window</div>
+
+          <div className="signup-stats">
+            <div className="signup-stat">
+              <div className="signup-stat-num">10</div>
+              <div className="signup-stat-label">Story-led stops</div>
+            </div>
+            <div className="signup-stat">
+              <div className="signup-stat-num">14 KM</div>
+              <div className="signup-stat-label">City center route</div>
+            </div>
+            <div className="signup-stat">
+              <div className="signup-stat-num">48 hrs</div>
+              <div className="signup-stat-label">Flexible access</div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <AmsterdamSkyline />
