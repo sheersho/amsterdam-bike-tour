@@ -9,6 +9,10 @@ export default function StopPage({ stop, stopIndex, stops, onNav, onHome }) {
   const [showBackToTop, setShowBackToTop] = useState(false);
   const topRef = useRef(null);
   const audioSrc = stop.audio || `/audio/stops/stop-${stop.id}.mp3`;
+  const nextStop = stopIndex < stops.length - 1 ? stops[stopIndex + 1] : null;
+  const mapEmbedSrc = nextStop
+    ? `https://www.google.com/maps?saddr=${stop.lat},${stop.lng}&daddr=${nextStop.lat},${nextStop.lng}&dirflg=b&output=embed`
+    : `https://www.google.com/maps?q=${stop.lat},${stop.lng}&z=16&output=embed`;
 
   useEffect(() => {
     topRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -107,10 +111,10 @@ export default function StopPage({ stop, stopIndex, stops, onNav, onHome }) {
       {showMap ? (
         <iframe
           className="map-embed"
-          src={`https://www.google.com/maps?q=${stop.lat},${stop.lng}&z=16&output=embed`}
+          src={mapEmbedSrc}
           loading="lazy"
           allowFullScreen
-          title={stop.name}
+          title={nextStop ? `${stop.name} to ${nextStop.name}` : stop.name}
         />
       ) : (
         <div className="narrative-section">
@@ -122,10 +126,10 @@ export default function StopPage({ stop, stopIndex, stops, onNav, onHome }) {
       {!showMap && (
         <iframe
           className="map-embed map-embed-spaced"
-          src={`https://www.google.com/maps?q=${stop.lat},${stop.lng}&z=16&output=embed`}
+          src={mapEmbedSrc}
           loading="lazy"
           allowFullScreen
-          title={stop.name}
+          title={nextStop ? `${stop.name} to ${nextStop.name}` : stop.name}
         />
       )}
 
