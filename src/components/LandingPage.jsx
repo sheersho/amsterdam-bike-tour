@@ -6,7 +6,7 @@ export default function LandingPage({ faq, onViewAll, onStopByStop, onFindNeares
   return (
     <div>
       <div className="landing-hero">
-        <h1>Self-Guided Bike Tours</h1>
+        <h1>Bill's Bike Tour</h1>
       </div>
 
       <div className="route-card">
