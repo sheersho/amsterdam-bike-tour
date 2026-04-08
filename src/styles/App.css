@@ -327,6 +327,19 @@ body {
   font-size: 13px;
 }
 
+.login-support-note {
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #555;
+}
+
+.login-support-note a {
+  color: #8b1a2b;
+  font-weight: 700;
+  text-decoration: none;
+}
+
 .magic-link-preview {
   display: inline-flex;
   margin-top: 10px;
@@ -359,16 +372,6 @@ body {
 
 .access-card {
   min-height: 220px;
-}
-
-.buy-tour-actions {
-  margin-top: 18px;
-  display: grid;
-  gap: 12px;
-}
-
-.inline-buy-tour-actions {
-  margin-top: 14px;
 }
 
 .nearest-stop-page {
@@ -423,30 +426,6 @@ body {
 .nearest-stop-back {
   width: 100%;
   margin-top: 14px;
-}
-
-.buy-tour-primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-}
-
-.buy-tour-secondary {
-  width: 100%;
-}
-
-.buy-tour-support {
-  margin-top: 18px;
-  font-size: 14px;
-  color: #555;
-  line-height: 1.5;
-}
-
-.buy-tour-support a {
-  color: #8b1a2b;
-  font-weight: 700;
-  text-decoration: none;
 }
 
 /* ── All Stops Page ── */

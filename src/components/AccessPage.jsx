@@ -16,10 +16,6 @@ export default function AccessPage({
   const [previewLink, setPreviewLink] = useState('');
   const requiresNewTour = error === TOUR_PURCHASE_REQUIRED_MESSAGE;
 
-  const handleComingSoon = () => {
-    window.alert('Coming soon.');
-  };
-
   useEffect(() => {
     let cancelled = false;
 
@@ -94,44 +90,17 @@ export default function AccessPage({
             <h2>
               {status === 'success'
                 ? 'Access Confirmed'
-                : requiresNewTour
-                  ? 'Buy A New Tour'
-                  : 'Need A Fresh Link?'}
+                : 'Need A Fresh Link?'}
             </h2>
             <p className="login-helper-text">
               {status === 'success'
                 ? 'Redirecting you into the tour now.'
-                : requiresNewTour
-                  ? 'This tour session has expired and can no longer be restored from this link.'
-                  : 'This link can no longer be used. Enter your email below and we’ll send a new one.'}
+                : 'This link can no longer be used. Enter your email below and we’ll send a new one.'}
             </p>
           </>
         )}
 
-        {error && <p className="login-error">{error}</p>}
-        {successMessage && <p className="login-success">{successMessage}</p>}
-        {previewLink && (
-          <a className="magic-link-preview" href={previewLink}>
-            Open preview access link
-          </a>
-        )}
-
-        {requiresNewTour && (
-          <div className="buy-tour-actions inline-buy-tour-actions">
-            <button
-              type="button"
-              className="login-btn buy-tour-primary"
-              onClick={handleComingSoon}
-            >
-              Buy New Tour
-            </button>
-            <a className="cta-btn cta-btn-outline buy-tour-secondary" href={`mailto:${supportEmail}`}>
-              Contact Admin
-            </a>
-          </div>
-        )}
-
-        {status !== 'verifying' && status !== 'success' && !requiresNewTour && (
+        {status !== 'verifying' && status !== 'success' && (
           <form className="login-form" onSubmit={handleResend}>
             <label className="login-label" htmlFor="resendEmail">Email</label>
             <input
@@ -144,6 +113,20 @@ export default function AccessPage({
               placeholder="you@example.com"
               required
             />
+
+            {error && <p className="login-error">{error}</p>}
+            {requiresNewTour && (
+              <p className="login-support-note">
+                This email appears to have an expired session. Please contact admin at{' '}
+                <a href={`mailto:${supportEmail}`}>{supportEmail}</a>.
+              </p>
+            )}
+            {successMessage && <p className="login-success">{successMessage}</p>}
+            {previewLink && (
+              <a className="magic-link-preview" href={previewLink}>
+                Open preview access link
+              </a>
+            )}
 
             <button type="submit" className="login-btn" disabled={submitting}>
               {submitting ? 'Sending...' : 'Resend Access Link'}
