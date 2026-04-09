@@ -1,4 +1,4 @@
-# 🚲 Amsterdam Tour by Sheersho & Abhishek (React + Vite)
+# 🚲 Amsterdam Tour by Sheersho (React + Vite)
 
 A simple web app to explore an Amsterdam tour route stop by stop.  
 Built with **React** + **Vite** for fast development.
