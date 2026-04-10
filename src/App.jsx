@@ -18,11 +18,21 @@ import {
   verifyMagicToken,
 } from './lib/api';
 
+// Current storage key
 const TOUR_TOKEN_KEY = 'tour-auth-token';
+const TOUR_LAST_EMAIL_KEY = 'tour-last-email';
+
+// Legacy keys kept only to clear stale data on login
 const LEGACY_TOUR_TOKEN_KEY = 'tour-token';
 const LEGACY_TOUR_EMAIL_KEY = 'tour-email';
 const LEGACY_TOUR_AUTH_EXPIRY_KEY = 'tour-auth-expiry';
-const TOUR_LAST_EMAIL_KEY = 'tour-last-email';
+
+// Named page identifiers — avoids scattered magic strings throughout render
+const PAGE = {
+  LANDING: 'landing',
+  STOP: 'stop',
+  ALL_STOPS: 'allStops',
+};
 
 function clearAuthStorage() {
   localStorage.removeItem(TOUR_TOKEN_KEY);
@@ -103,7 +113,7 @@ export default function App() {
   const [authState, setAuthState] = useState(() => (readStoredToken() ? 'checking' : 'anonymous'));
   const [expiredEmail, setExpiredEmail] = useState(() => readLastEmail());
   const [pendingRoute, setPendingRoute] = useState(null);
-  const [page, setPage] = useState("landing");
+  const [page, setPage] = useState(PAGE.LANDING);
   const [currentStop, setCurrentStop] = useState(0);
   const [tourContent, setTourContent] = useState(() => ({ stops: STOPS, faq: FAQ }));
   const [contentState, setContentState] = useState({ status: 'idle', error: '' });
@@ -223,14 +233,14 @@ export default function App() {
 
   const goToStop = (i) => {
     if (!canAccessTour) {
-      setPendingRoute({ page: "stop", stopIndex: i });
+      setPendingRoute({ page: PAGE.STOP, stopIndex: i });
       updateLocation('/tour');
       window.scrollTo(0, 0);
       return;
     }
 
     setCurrentStop(i);
-    setPage("stop");
+    setPage(PAGE.STOP);
     if (route.path !== '/tour') {
       updateLocation('/tour');
     }
@@ -239,13 +249,13 @@ export default function App() {
 
   const goToAllStops = () => {
     if (!canAccessTour) {
-      setPendingRoute({ page: "allStops" });
+      setPendingRoute({ page: PAGE.ALL_STOPS });
       updateLocation('/tour');
       window.scrollTo(0, 0);
       return;
     }
 
-    setPage("allStops");
+    setPage(PAGE.ALL_STOPS);
     if (route.path !== '/tour') {
       updateLocation('/tour');
     }
@@ -267,13 +277,13 @@ export default function App() {
     setShowWelcomeModal(true);
     updateLocation('/tour', { replace: true });
 
-    if (pendingRoute?.page === "stop") {
+    if (pendingRoute?.page === PAGE.STOP) {
       setCurrentStop(pendingRoute.stopIndex ?? 0);
-      setPage("stop");
-    } else if (pendingRoute?.page === "allStops") {
-      setPage("allStops");
+      setPage(PAGE.STOP);
+    } else if (pendingRoute?.page === PAGE.ALL_STOPS) {
+      setPage(PAGE.ALL_STOPS);
     } else {
-      setPage("landing");
+      setPage(PAGE.LANDING);
     }
 
     setPendingRoute(null);
@@ -313,13 +323,16 @@ export default function App() {
     setAuthInlineError('');
     setShowWelcomeModal(false);
     setPendingRoute(null);
-    setPage("landing");
+    setPage(PAGE.LANDING);
     updateLocation('/', { replace: true });
     window.scrollTo(0, 0);
   };
 
   const stops = tourContent.stops;
   const faq = tourContent.faq;
+
+  // True once the user is authorised and tour data has loaded
+  const isTourReady = route.path === '/tour' && canAccessTour && contentState.status === 'ready';
 
   return (
     <div className="app">
@@ -396,7 +409,7 @@ export default function App() {
         </div>
       )}
 
-      {route.path === '/tour' && canAccessTour && contentState.status === 'ready' && page === "landing" && (
+      {isTourReady && page === PAGE.LANDING && (
         <LandingPage
           faq={faq}
           onViewAll={goToAllStops}
@@ -405,21 +418,21 @@ export default function App() {
         />
       )}
 
-      {route.path === '/tour' && canAccessTour && contentState.status === 'ready' && page === "allStops" && (
+      {isTourReady && page === PAGE.ALL_STOPS && (
         <AllStopsPage
           stops={stops}
           onSelectStop={goToStop}
-          onHome={() => { setPage("landing"); window.scrollTo(0, 0); }}
+          onHome={() => { setPage(PAGE.LANDING); window.scrollTo(0, 0); }}
         />
       )}
 
-      {route.path === '/tour' && canAccessTour && contentState.status === 'ready' && page === "stop" && (
+      {isTourReady && page === PAGE.STOP && (
         <StopPage
           stops={stops}
           stop={stops[currentStop]}
           stopIndex={currentStop}
           onNav={goToStop}
-          onHome={() => { setPage("landing"); window.scrollTo(0, 0); }}
+          onHome={() => { setPage(PAGE.LANDING); window.scrollTo(0, 0); }}
         />
       )}
 

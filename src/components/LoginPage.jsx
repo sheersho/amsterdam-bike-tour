@@ -12,7 +12,7 @@ export default function LoginPage({
   buttonLabel = 'Get Access',
   supportEmail = 'sheersho.business@gmail.com',
 }) {
-  const [emailId, setEmailId] = useState(initialEmail);
+  const [email, setEmail] = useState(initialEmail);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [previewLink, setPreviewLink] = useState('');
@@ -20,7 +20,7 @@ export default function LoginPage({
   const requiresNewTour = error === TOUR_PURCHASE_REQUIRED_MESSAGE;
 
   useEffect(() => {
-    setEmailId(initialEmail);
+    setEmail(initialEmail);
   }, [initialEmail]);
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export default function LoginPage({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const normalized = emailId.trim();
+    const normalized = email.trim();
 
     if (!normalized) {
       setError('Enter your email to continue.');
@@ -76,14 +76,14 @@ export default function LoginPage({
           <p className="login-helper-text">{helperText}</p>
 
           <form className="login-form signup-form" onSubmit={handleSubmit}>
-            <label className="login-label" htmlFor="emailId">Email</label>
+            <label className="login-label" htmlFor="email">Email</label>
             <div className="signup-form-row">
               <input
-                id="emailId"
+                id="email"
                 type="email"
                 autoComplete="email"
-                value={emailId}
-                onChange={(e) => setEmailId(e.target.value)}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="login-input signup-input"
                 placeholder="Enter your email address"
                 required

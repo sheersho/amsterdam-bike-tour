@@ -2,6 +2,13 @@ import React, { useState, useRef, useEffect } from 'react';
 import AmsterdamSkyline from './AmsterdamSkyline';
 import { HERO_EMOJI } from '../data/tourdata';
 
+const UPCOMING_TOURS = [
+  { name: 'Amsterdam West',  emoji: '🌿', bgClass: 'tour-promo-img-west'  },
+  { name: 'Amsterdam East',  emoji: '⚓', bgClass: 'tour-promo-img-east'  },
+  { name: 'Amsterdam North', emoji: '🏗️', bgClass: 'tour-promo-img-north' },
+  { name: 'Amsterdam South', emoji: '🎭', bgClass: 'tour-promo-img-south' },
+];
+
 export default function StopPage({ stop, stopIndex, stops, onNav, onHome }) {
   const [showMap, setShowMap] = useState(false);
   const [isAudioModalOpen, setIsAudioModalOpen] = useState(false);
@@ -49,6 +56,32 @@ export default function StopPage({ stop, stopIndex, stops, onNav, onHome }) {
   return (
     <div>
       <div ref={topRef} />
+
+      {/* Top navigation bar */}
+      <div className="stop-top-nav">
+        <div className="stop-top-nav-left">
+          <button className="stop-top-nav-btn stop-top-nav-btn-home" onClick={onHome} aria-label="Home">
+            «
+          </button>
+          <button
+            className="stop-top-nav-btn"
+            onClick={() => onNav(stopIndex - 1)}
+            disabled={stopIndex === 0}
+            aria-label="Previous stop"
+          >
+            ‹
+          </button>
+        </div>
+        <span className="stop-top-nav-title">{stop.name}</span>
+        <button
+          className="stop-top-nav-btn"
+          onClick={() => onNav(stopIndex + 1)}
+          disabled={stopIndex >= stops.length - 1}
+          aria-label="Next stop"
+        >
+          ›
+        </button>
+      </div>
 
       {/* Hero */}
       <div className="stop-hero">
@@ -136,12 +169,7 @@ export default function StopPage({ stop, stopIndex, stops, onNav, onHome }) {
       {/* Other Tours */}
       <div className="other-tours">
         <h3>Self-guided bike tours</h3>
-        {[
-          { name: "Amsterdam West", emoji: "🌿", bgClass: "tour-promo-img-west" },
-          { name: "Amsterdam East", emoji: "⚓", bgClass: "tour-promo-img-east" },
-          { name: "Amsterdam North", emoji: "🏗️", bgClass: "tour-promo-img-north" },
-          { name: "Amsterdam South", emoji: "🎭", bgClass: "tour-promo-img-south" },
-        ].map((t) => (
+        {UPCOMING_TOURS.map((t) => (
           <div key={t.name} className="tour-promo-card">
             <div className={`tour-promo-img ${t.bgClass}`}>{t.emoji}</div>
             <div className="tour-promo-info">

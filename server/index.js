@@ -119,6 +119,30 @@ function getSessionPayload(token) {
   return payload;
 }
 
+// Validates the Bearer token on a request and sends the appropriate error
+// response if invalid. Returns the session payload on success, or null if a
+// response has already been sent.
+function requireSession(req, res) {
+  const token = getBearerToken(req);
+  if (!token) {
+    sendJson(res, 401, { error: 'Missing token.' });
+    return null;
+  }
+
+  const payload = getSessionPayload(token);
+  if (!payload) {
+    sendJson(res, 401, { error: 'Invalid or expired token.' });
+    return null;
+  }
+
+  if (payload === 'revoked') {
+    sendJson(res, 403, { error: 'Access revoked for this account.' });
+    return null;
+  }
+
+  return payload;
+}
+
 const server = http.createServer(async (req, res) => {
   if (!req.url) {
     sendJson(res, 404, { error: 'Not found.' });
@@ -193,22 +217,8 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (req.method === 'GET' && requestUrl.pathname === '/tour/content') {
-    const token = getBearerToken(req);
-    if (!token) {
-      sendJson(res, 401, { error: 'Missing token.' });
-      return;
-    }
-
-    const payload = getSessionPayload(token);
-    if (!payload) {
-      sendJson(res, 401, { error: 'Invalid or expired token.' });
-      return;
-    }
-
-    if (payload === 'revoked') {
-      sendJson(res, 403, { error: 'Access revoked for this account.' });
-      return;
-    }
+    const payload = requireSession(req, res);
+    if (!payload) return;
 
     sendJson(res, 200, {
       email: payload.email,
@@ -219,22 +229,8 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (req.method === 'GET' && requestUrl.pathname === '/tour/status') {
-    const token = getBearerToken(req);
-    if (!token) {
-      sendJson(res, 401, { error: 'Missing token.' });
-      return;
-    }
-
-    const payload = getSessionPayload(token);
-    if (!payload) {
-      sendJson(res, 401, { error: 'Invalid or expired token.' });
-      return;
-    }
-
-    if (payload === 'revoked') {
-      sendJson(res, 403, { error: 'Access revoked for this account.' });
-      return;
-    }
+    const payload = requireSession(req, res);
+    if (!payload) return;
 
     sendJson(res, 200, {
       ok: true,
