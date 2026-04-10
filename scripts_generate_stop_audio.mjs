@@ -7,7 +7,7 @@ import ffmpegPath from 'ffmpeg-static';
 const outDir = path.resolve('public/audio/stops');
 fs.mkdirSync(outDir, { recursive: true });
 
-const voice = 'Samantha';
+const voice = 'Daniel';
 const sampleRate = 22050;
 if (!ffmpegPath) {
   throw new Error('ffmpeg-static binary path was not resolved.');
@@ -24,15 +24,19 @@ for (const stop of STOPS) {
   const wavPath = path.join(outDir, `stop-${stop.id}.wav`);
   const mp3Path = path.join(outDir, `stop-${stop.id}.mp3`);
 
+  console.log(`Generating stop-${stop.id}.mp3 (${stop.name})…`);
+
   execSync(
     `say -v ${JSON.stringify(voice)} -o ${JSON.stringify(wavPath)} --file-format=WAVE --data-format=LEI16@${sampleRate} -- ${JSON.stringify(txt)}`,
     { stdio: 'inherit' },
   );
   execSync(
-    `${JSON.stringify(ffmpegPath)} -y -i ${JSON.stringify(wavPath)} -ac 1 -ar ${sampleRate} -b:a 96k ${JSON.stringify(mp3Path)}`,
+    `${JSON.stringify(ffmpegPath)} -y -i ${JSON.stringify(wavPath)} -ac 1 -ar ${sampleRate} -b:a 128k ${JSON.stringify(mp3Path)}`,
     { stdio: 'inherit' },
   );
   fs.unlinkSync(wavPath);
 
-  console.log(`Generated ${path.basename(mp3Path)}`);
+  console.log(`  ✓ stop-${stop.id}.mp3`);
 }
+
+console.log('\nAll audio files generated.');
