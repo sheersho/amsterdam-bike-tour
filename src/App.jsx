@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './styles/App.css';
+import './styles/ride.css';
 import { FAQ, STOPS } from './data/tourdata';
 
 import LandingPage from './components/LandingPage';
@@ -8,6 +9,7 @@ import StopPage from './components/StopPage';
 import LoginPage from './components/LoginPage';
 import AccessPage from './components/AccessPage';
 import NearestStopPage from './components/NearestStopPage';
+import RideApp from './components/RideApp';
 import {
   fetchTourContent,
   fetchTourStatus,
@@ -62,6 +64,10 @@ function getRoute() {
   const pathname = window.location.pathname.replace(/\/+$/, '') || '/';
   const searchParams = new URLSearchParams(window.location.search);
   const authOff = searchParams.get('auth') === 'off';
+  if (pathname === '/ride' || pathname.startsWith('/ride/')) {
+    return { path: '/ride', authOff: false };
+  }
+
   if (pathname === '/access') {
     return {
       path: '/access',
@@ -333,6 +339,15 @@ export default function App() {
 
   // True once the user is authorised and tour data has loaded
   const isTourReady = route.path === '/tour' && canAccessTour && contentState.status === 'ready';
+
+  // Ride flow gets its own isolated shell — no legacy header/footer/buttons
+  if (route.path === '/ride') {
+    return (
+      <div className="app">
+        <RideApp />
+      </div>
+    );
+  }
 
   return (
     <div className="app">
