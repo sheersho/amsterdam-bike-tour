@@ -355,7 +355,7 @@ export default function App() {
         <LandingPage
           faq={FAQ}
           onViewAll={goToAllStops}
-          onStopByStop={() => goToStop(0)}
+          onStopByStop={() => updateLocation('/ride')}
           onFindNearestStart={goToNearestStart}
         />
       )}
