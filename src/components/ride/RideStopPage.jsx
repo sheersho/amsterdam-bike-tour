@@ -9,10 +9,12 @@ export default function RideStopPage({
   routeIndex,
   routeLength,
   session,
+  paymentsEnabled = true,
   onContinue,
   onPaywall,
 }) {
-  const isPaid = session?.is_paid;
+  // When payments are disabled by staff, treat every user as paid
+  const isPaid = session?.is_paid || !paymentsEnabled;
   // Index 0 always free. Index 1: full content shown but paywall blocks continuation.
   // Index 2+: full content only if paid, otherwise paywall gate.
   const showNarrative = routeIndex <= 1 || isPaid;

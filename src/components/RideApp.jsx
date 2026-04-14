@@ -12,7 +12,7 @@ import {
   isSessionExpired,
   sessionIsValid,
 } from '../lib/rideSession';
-import { createRideSession, getRideSession } from '../lib/rideApi';
+import { createRideSession, getRideSession, getRideConfig } from '../lib/rideApi';
 
 import RideLandingPage from './ride/RideLandingPage';
 import LocationPage from './ride/LocationPage';
@@ -55,12 +55,20 @@ export default function RideApp() {
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState('');
   const [showEmailModal, setShowEmailModal] = useState(false);
+  const [paymentsEnabled, setPaymentsEnabled] = useState(true);
 
   // Keep ridePath in sync with browser navigation (back/forward)
   useEffect(() => {
     const handler = () => setRidePath(parseRidePath());
     window.addEventListener('popstate', handler);
     return () => window.removeEventListener('popstate', handler);
+  }, []);
+
+  // Fetch feature flags once on mount
+  useEffect(() => {
+    getRideConfig()
+      .then(config => setPaymentsEnabled(config.payments_enabled !== false))
+      .catch(() => {}); // default to enabled on failure
   }, []);
 
   // On startup: sync session from backend in case the user closed the browser
@@ -286,6 +294,7 @@ export default function RideApp() {
           routeIndex={routeIndex}
           routeLength={route.length}
           session={session}
+          paymentsEnabled={paymentsEnabled}
           onContinue={handleContinueToNextStop}
           onPaywall={handlePaywall}
         />
@@ -297,6 +306,12 @@ export default function RideApp() {
   }
 
   if (ridePath.type === 'paywall') {
+    if (!paymentsEnabled) {
+      // Payments are disabled — bounce back to wherever the user came from
+      const returnStop = session?.current_stop_id;
+      rideNavigate(returnStop ? `stop/${returnStop}` : '', { replace: true });
+      return null;
+    }
     return (
       <PaywallPage session={session} onBack={handlePaywallBack} />
     );

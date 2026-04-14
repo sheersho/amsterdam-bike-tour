@@ -98,6 +98,33 @@ export async function saveRideEmail({ sessionId, email }) {
   return handleRes(res);
 }
 
+// GET /ride/config — public, read by frontend on ride start
+// → { payments_enabled: true }
+export async function getRideConfig() {
+  if (DEV_MOCK) return { payments_enabled: true };
+  const res = await fetch(`${API_BASE_URL}/ride/config`);
+  return handleRes(res);
+}
+
+// GET /admin/flags — staff only, requires X-Admin-Key header
+export async function getAdminFlags(adminKey) {
+  const res = await fetch(`${API_BASE_URL}/admin/flags`, {
+    headers: { 'X-Admin-Key': adminKey },
+  });
+  return handleRes(res);
+}
+
+// PUT /admin/flags — toggle feature flags
+// body: { payments_enabled: true/false }
+export async function setAdminFlags(adminKey, flags) {
+  const res = await fetch(`${API_BASE_URL}/admin/flags`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', 'X-Admin-Key': adminKey },
+    body: JSON.stringify(flags),
+  });
+  return handleRes(res);
+}
+
 // Poll until is_paid = true or max attempts exhausted
 export async function pollSessionUntilPaid(sessionId, maxAttempts = 5, intervalMs = 2000) {
   for (let i = 0; i < maxAttempts; i++) {
