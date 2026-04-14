@@ -258,7 +258,11 @@ export default function RideApp() {
 
   if (ridePath.type === 'location') {
     return (
-      <LocationPage onEntryPointChosen={handleEntryPointChosen} />
+      <LocationPage
+        onEntryPointChosen={handleEntryPointChosen}
+        loading={creating}
+        error={createError}
+      />
     );
   }
 

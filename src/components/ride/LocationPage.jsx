@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import { ENTRY_POINTS, nearestEntryPoint, mapsNavUrl } from '../../data/rideRoutes';
 
 // state machine: 'prompt' → 'detecting' → 'detected' | 'denied'
-export default function LocationPage({ onEntryPointChosen }) {
+export default function LocationPage({ onEntryPointChosen, loading = false, error: startError = '' }) {
   const [state, setState] = useState('prompt');
   const [detectedEp, setDetectedEp] = useState(null);
-  const [error, setError] = useState('');
 
   function requestLocation() {
     if (!navigator.geolocation) {
@@ -76,8 +75,9 @@ export default function LocationPage({ onEntryPointChosen }) {
             <button
               className="ride-btn ride-btn-primary"
               onClick={() => handleStartHere(detectedEp)}
+              disabled={loading}
             >
-              I&apos;m here · Start ride
+              {loading ? 'Starting…' : 'I\'m here · Start ride'}
             </button>
             <button className="ride-btn ride-btn-ghost" onClick={() => setState('denied')}>
               Choose a different start
@@ -106,8 +106,9 @@ export default function LocationPage({ onEntryPointChosen }) {
                     <button
                       className="ride-btn ride-btn-primary ride-ep-start-btn"
                       onClick={() => handleStartHere(ep)}
+                      disabled={loading}
                     >
-                      Start here
+                      {loading ? 'Starting…' : 'Start here'}
                     </button>
                   </div>
                 </div>
@@ -115,6 +116,7 @@ export default function LocationPage({ onEntryPointChosen }) {
             </div>
           </div>
         )}
+      {startError && <p className="ride-error" style={{ textAlign: 'center', marginTop: 12 }}>{startError}</p>}
       </div>
     </div>
   );
