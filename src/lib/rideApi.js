@@ -1,6 +1,6 @@
 import { API_BASE_URL } from './api';
 
-export const TOUR_PRICE_DISPLAY = '€10';
+export const TOUR_PRICE_DISPLAY = '€9.99';
 
 // ─── Dev mock (set VITE_DEV_MOCK=true in .env.local) ─────────────────────────
 const DEV_MOCK = import.meta.env.VITE_DEV_MOCK === 'true';
