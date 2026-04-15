@@ -660,24 +660,6 @@
   min-height: 100vh;
 }
 
-.ride-paywall-page .ride-page-title {
-  color: #15283b;
-  text-align: center;
-}
-
-.ride-paywall-page-header {
-  padding: 20px 20px 18px;
-}
-
-.ride-paywall-glass-header {
-  background:
-    radial-gradient(circle at 8% 18%, rgba(22, 50, 79, 0.08), transparent 42%),
-    linear-gradient(180deg, #f8f4ee 0%, #f5f1ea 100%);
-  border-bottom: 1px solid rgba(22, 50, 79, 0.14);
-  box-shadow: 0 2px 10px rgba(12, 30, 48, 0.12);
-  padding: 22px 20px 18px;
-  text-align: center;
-}
 
 .ride-paywall-page-body {
   padding: 24px 20px 40px;
@@ -714,6 +696,14 @@
   margin-top: -4px;
 }
 
+.ride-paywall-rating {
+  font-size: 13px;
+  font-weight: 600;
+  color: #d97706;
+  margin-top: -6px;
+  letter-spacing: 0.01em;
+}
+
 .ride-paywall-includes {
   list-style: none;
   padding: 0;
@@ -743,11 +733,17 @@
   flex-shrink: 0;
 }
 
+.ride-paywall-divider {
+  border: none;
+  border-top: 1px solid #ece9f4;
+  margin: 2px 0;
+}
+
 .ride-paywall-price-row {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 10px;
   margin: 4px 0;
 }
 
@@ -756,6 +752,14 @@
   font-size: 40px;
   font-weight: 900;
   color: #1a1a2e;
+  line-height: 1;
+}
+
+.ride-paywall-price-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
 }
 
 .ride-paywall-one-time {
@@ -763,11 +767,18 @@
   color: #9ca3af;
 }
 
+.ride-paywall-instant {
+  font-size: 12px;
+  font-weight: 600;
+  color: #16a34a;
+}
+
 .ride-paywall-pay-btn {
   background: linear-gradient(135deg, #FACC15 0%, #F59E0B 100%);
   color: #1a1a2e;
   font-weight: 700;
   box-shadow: 0 6px 20px rgba(245, 158, 11, 0.32);
+  border-radius: 20px;
 }
 
 .ride-paywall-pay-btn:hover:not(:disabled) {
@@ -779,10 +790,40 @@
   transform: scale(0.98);
 }
 
-.ride-paywall-secure-note {
-  font-size: 12px;
+.ride-paywall-trust-row {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 11px;
   color: #9ca3af;
+  margin-top: -2px;
+}
+
+.ride-paywall-trust-row span {
+  white-space: nowrap;
+}
+
+.ride-paywall-back-link {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 4px 0;
+  font-family: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
   margin-top: -4px;
+}
+
+.ride-paywall-back-link:hover:not(:disabled) {
+  color: #6b6375;
+}
+
+.ride-paywall-back-link:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 /* ── Payment return page ─────────────────────────────────────────────────────── */

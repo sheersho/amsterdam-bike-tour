@@ -36,26 +36,28 @@ export default function PaywallPage({ session, onBack }) {
 
   return (
     <div className="ride-page ride-paywall-page">
-      <div className="ride-paywall-page-header ride-paywall-glass-header">
-        <h1 className="ride-page-title">Unlock the full tour</h1>
-      </div>
-
       <div className="ride-paywall-page-body">
         <div className="ride-paywall-card">
           <div className="ride-paywall-card-icon">🚲</div>
           <h2 className="ride-paywall-card-title">Bill&apos;s Bike Tour</h2>
           <p className="ride-paywall-card-desc">Amsterdam City Centre · 10 stops · 14 km</p>
+          <p className="ride-paywall-rating">★ 4.8 · 120+ riders</p>
 
           <ul className="ride-paywall-includes">
             <li>Full narratives for every stop</li>
             <li>Turn-by-turn Maps navigation</li>
             <li>48 hours of access</li>
-            <li>Works in your browser — no app</li>
+            <li>No app needed — opens in browser</li>
           </ul>
+
+          <div className="ride-paywall-divider" />
 
           <div className="ride-paywall-price-row">
             <span className="ride-paywall-big-price">{TOUR_PRICE_DISPLAY}</span>
-            <span className="ride-paywall-one-time">one-time</span>
+            <div className="ride-paywall-price-meta">
+              <span className="ride-paywall-one-time">one-time</span>
+              <span className="ride-paywall-instant">Instant access</span>
+            </div>
           </div>
 
           {error && <p className="ride-error">{error}</p>}
@@ -65,14 +67,18 @@ export default function PaywallPage({ session, onBack }) {
             onClick={handlePay}
             disabled={loading}
           >
-            {loading ? 'Opening checkout…' : `Pay ${TOUR_PRICE_DISPLAY} and continue`}
+            {loading ? 'Opening checkout…' : `Pay ${TOUR_PRICE_DISPLAY} — Start riding`}
           </button>
 
-          <button className="ride-btn ride-btn-ghost" onClick={onBack} disabled={loading}>
-            ← Go back
-          </button>
+          <div className="ride-paywall-trust-row">
+            <span>🔒 Secured by Stripe</span>
+            <span>👤 No account needed</span>
+            <span>⚡ Instant access</span>
+          </div>
 
-          <p className="ride-paywall-secure-note">Secured by Stripe · No account required</p>
+          <button className="ride-paywall-back-link" onClick={onBack} disabled={loading}>
+            ← back
+          </button>
         </div>
       </div>
     </div>
