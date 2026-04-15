@@ -19,6 +19,7 @@ import {
   TOUR_PURCHASE_REQUIRED_MESSAGE,
   verifyMagicToken,
 } from './lib/api';
+import { getRideConfig } from './lib/rideApi';
 
 // Current storage key
 const TOUR_TOKEN_KEY = 'tour-auth-token';
@@ -126,9 +127,10 @@ export default function App() {
   const [contentReloadCount, setContentReloadCount] = useState(0);
   const [authInlineError, setAuthInlineError] = useState('');
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
+  const [paymentsEnabled, setPaymentsEnabled] = useState(true);
   const feedbackLink = "https://forms.gle/2xmXFyHcSLPrvoBJA";
   const isAuthenticated = authState === 'authenticated' && Boolean(authToken);
-  const canAccessTour = isAuthenticated || isDevBypass;
+  const canAccessTour = isAuthenticated || isDevBypass || !paymentsEnabled;
   const currentYear = new Date().getFullYear();
   const copyrightLabel = currentYear > 2026
     ? `© Meeus Consulting 2026-${currentYear}`
@@ -138,6 +140,12 @@ export default function App() {
     const handleRouteChange = () => setRoute(getRoute());
     window.addEventListener('popstate', handleRouteChange);
     return () => window.removeEventListener('popstate', handleRouteChange);
+  }, []);
+
+  useEffect(() => {
+    getRideConfig()
+      .then(config => setPaymentsEnabled(config.payments_enabled !== false))
+      .catch(() => {}); // default to enabled on failure
   }, []);
 
   useEffect(() => {
@@ -183,12 +191,12 @@ export default function App() {
   useEffect(() => {
     if (route.path !== '/tour') return;
     if (!canAccessTour) return;
-    if (!isDevBypass && authState !== 'authenticated') return;
+    if (!isDevBypass && paymentsEnabled && authState !== 'authenticated') return;
 
     let cancelled = false;
 
     async function loadTour() {
-      if (isDevBypass && !authToken) {
+      if ((isDevBypass || !paymentsEnabled) && !authToken) {
         setTourContent({ stops: STOPS, faq: FAQ });
         setContentState({ status: 'ready', error: '' });
         return;
@@ -235,7 +243,7 @@ export default function App() {
     return () => {
       cancelled = true;
     };
-  }, [authState, authToken, canAccessTour, contentReloadCount, isDevBypass, route.path]);
+  }, [authState, authToken, canAccessTour, contentReloadCount, isDevBypass, paymentsEnabled, route.path]);
 
   const goToStop = (i) => {
     setCurrentStop(i);
@@ -371,19 +379,19 @@ export default function App() {
         />
       )}
 
-      {route.path === ‘/tour’ && !canAccessTour && page !== PAGE.STOP && (
+      {route.path === '/tour' && !canAccessTour && page !== PAGE.STOP && (
         <LoginPage
           onRequestAccess={handleRequestAccess}
           initialEmail={expiredEmail}
           title="Sign Up to Get Access Code"
-          subtitle="Sign up with your email and we’ll send a secure access code link to start your Amsterdam bike tour."
-          helperText="We’ll email a one-tap access link that signs you in securely."
+          subtitle="Sign up with your email and we'll send a secure access code link to start your Amsterdam bike tour."
+          helperText="We'll email a one-tap access link that signs you in securely."
           buttonLabel="Sign Up"
           initialError={authInlineError}
         />
       )}
 
-      {route.path === ‘/tour’ && !canAccessTour && page === PAGE.STOP && (
+      {route.path === '/tour' && !canAccessTour && page === PAGE.STOP && (
         <StopPage
           stops={STOPS}
           stop={STOPS[currentStop]}
