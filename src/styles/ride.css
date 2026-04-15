@@ -297,40 +297,45 @@
   z-index: 20;
   display: flex;
   align-items: center;
-  padding: 0 12px;
-  gap: 8px;
-  height: 60px;
-  background: #e7c8cf;
-  border-bottom: 1px solid #d8b2ba;
+  padding: 10px 12px;
+  gap: 10px;
+  min-height: 68px;
+  background:
+    radial-gradient(circle at 8% 18%, rgba(22, 50, 79, 0.08), transparent 42%),
+    linear-gradient(180deg, #f8f4ee 0%, #f5f1ea 100%);
+  border-bottom: 1px solid rgba(22, 50, 79, 0.14);
+  box-shadow: 0 2px 10px rgba(12, 30, 48, 0.12);
 }
 
 .ride-stop-header-left {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .ride-stop-header-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  border: none;
-  background: transparent;
-  color: #111;
-  font-size: 46px;
+  width: 48px;
+  height: 48px;
+  border: 1px solid rgba(22, 50, 79, 0.16);
+  background: rgba(255, 255, 255, 0.72);
+  color: #16324f;
+  font-size: 34px;
   line-height: 1;
-  border-radius: 10px;
+  border-radius: 14px;
   padding: 0;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  transition: background 0.12s, transform 0.1s, opacity 0.1s;
+  transition: background 0.12s, transform 0.1s, opacity 0.1s, box-shadow 0.12s;
+  box-shadow: 0 1px 2px rgba(13, 27, 39, 0.08);
 }
 
 .ride-stop-header-btn:active {
-  background: rgba(255, 255, 255, 0.3);
-  transform: scale(0.91);
+  background: rgba(255, 255, 255, 0.9);
+  transform: scale(0.95);
+  box-shadow: 0 2px 8px rgba(13, 27, 39, 0.16) inset;
 }
 
 .ride-stop-header-btn:disabled {
@@ -339,13 +344,15 @@
 }
 
 .ride-stop-header-home-btn {
-  color: #111;
+  color: #8b1a2b;
+  border-color: rgba(139, 26, 43, 0.26);
+  background: rgba(139, 26, 43, 0.08);
 }
 
 .ride-stop-name-label {
-  font-size: 18px;
+  font-size: 19px;
   font-weight: 700;
-  color: #2a2a2a;
+  color: #15283b;
   text-align: center;
   flex: 1;
   white-space: nowrap;
@@ -399,6 +406,54 @@
   flex-direction: column;
 }
 
+.ride-stop-page .stops-grid-item {
+  width: 100%;
+  border: none;
+  background: transparent;
+  text-align: left;
+  font-family: inherit;
+}
+
+.ride-stop-page .stops-grid-item.locked {
+  cursor: not-allowed;
+}
+
+.ride-stop-page .stops-grid-item.locked .num {
+  color: #8a8f98;
+}
+
+.ride-stop-page .stops-grid-item.locked .sname {
+  display: inline-flex;
+  align-items: center;
+  color: #8a8f98;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  filter: blur(1.2px);
+  user-select: none;
+}
+
+.ride-stop-page .stops-grid-item.locked .sname::after {
+  content: "";
+  display: inline-block;
+  width: 100%;
+  height: 1.2em;
+  margin-left: -100%;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(124, 132, 145, 0.2) 0 4px,
+      rgba(124, 132, 145, 0.36) 4px 8px
+    );
+  border-radius: 4px;
+  mix-blend-mode: multiply;
+}
+
+.stops-lock-badge {
+  margin-left: auto;
+  font-size: 12px;
+  opacity: 0.85;
+}
+
 .ride-stop-narrative {
   padding: 20px 18px 0;
   display: flex;
@@ -417,6 +472,32 @@
   text-align: center;
   color: #6b6375;
   font-size: 15px;
+}
+
+.ride-stop-map-wrap {
+  margin: 6px 16px 0;
+  border: 1px solid #e7e2d9;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.ride-stop-map-title {
+  padding: 10px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #5f5a52;
+  background: #f8f5ee;
+  border-bottom: 1px solid #e7e2d9;
+}
+
+.ride-stop-map-embed {
+  width: 100%;
+  height: 260px;
+  border: none;
+  display: block;
 }
 
 .ride-stop-actions {

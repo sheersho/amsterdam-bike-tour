@@ -6,6 +6,7 @@ import { TOUR_PRICE_DISPLAY } from '../../lib/rideApi';
 export default function RideStopPage({
   stop,
   nextStop,
+  route = [],
   routeIndex,
   routeLength,
   session,
@@ -15,13 +16,22 @@ export default function RideStopPage({
   onHome,
   onPrevStop,
   onNextStop,
+  onSelectStop,
 }) {
   // When payments are disabled by staff, treat every user as paid
-  const isPaid = session?.is_paid || !paymentsEnabled;
+  const hasPaidAccess = session?.is_paid === true;
+  const isPaid = hasPaidAccess || !paymentsEnabled;
+  // Maps are locked for free users while payments are enabled.
+  const canUseMaps = !paymentsEnabled || hasPaidAccess;
+  const maxVisibleStopsForFree = 3;
+  const shouldLimitStopsGrid = paymentsEnabled && !hasPaidAccess;
   // Index 0 always free. Index 1: full content shown but paywall blocks continuation.
   // Index 2+: full content only if paid, otherwise paywall gate.
   const showNarrative = routeIndex <= 1 || isPaid;
   const isLastStop = routeIndex === routeLength - 1;
+  const mapEmbedSrc = nextStop
+    ? `https://www.google.com/maps?saddr=${stop.lat},${stop.lng}&daddr=${nextStop.lat},${nextStop.lng}&dirflg=b&output=embed`
+    : `https://www.google.com/maps?q=${stop.lat},${stop.lng}&z=16&output=embed`;
 
   // Show paywall section instead of Continue when user is unpaid and past first free stop
   const showPaywallSection = routeIndex >= (FREE_STOP_COUNT - 1) && !isPaid;
@@ -93,6 +103,42 @@ export default function RideStopPage({
         </div>
       </div>
 
+      {/* Stops card (always visible) */}
+      <div className="stops-nav">
+        <h3>Bike Stops</h3>
+        <div className="stops-grid">
+          {route.map((routeStop, idx) => (
+            (() => {
+              const isLocked = shouldLimitStopsGrid && idx >= maxVisibleStopsForFree;
+              const isCurrent = idx === routeIndex;
+              return (
+                <button
+                  type="button"
+                  key={routeStop.id}
+                  className={`stops-grid-item ${isCurrent ? 'current' : ''} ${isLocked ? 'locked' : ''}`}
+                  onClick={() => {
+                    if (isLocked) return;
+                    onSelectStop?.(idx);
+                  }}
+                  aria-label={isLocked ? `Locked stop ${idx + 1}` : `Go to stop ${idx + 1}: ${routeStop.name}`}
+                >
+                  <span className="num">{idx + 1}.</span>
+                  <span className="sname">{isLocked ? 'Locked stop' : routeStop.name}</span>
+                  {isLocked && (
+                    <span className="stops-lock-badge" aria-hidden="true">🔒</span>
+                  )}
+                  {isCurrent && !isLocked && (
+                    <span className="current-tooltip current-tooltip-tick" role="status" aria-label="Current stop">
+                      ✓
+                    </span>
+                  )}
+                </button>
+              );
+            })()
+          ))}
+        </div>
+      </div>
+
       {/* Narrative */}
       <div className="ride-stop-content">
         {showNarrative ? (
@@ -105,6 +151,21 @@ export default function RideStopPage({
           // Teaser for locked stops 2+ when unpaid (shouldn't normally be reached via normal flow)
           <div className="ride-stop-locked-teaser">
             <p>Unlock the full tour to continue reading.</p>
+          </div>
+        )}
+
+        {canUseMaps && (
+          <div className="ride-stop-map-wrap">
+            <div className="ride-stop-map-title">
+              {nextStop ? `Route to ${nextStop.name}` : 'Stop location'}
+            </div>
+            <iframe
+              className="ride-stop-map-embed"
+              src={mapEmbedSrc}
+              loading="lazy"
+              allowFullScreen
+              title={nextStop ? `${stop.name} to ${nextStop.name}` : stop.name}
+            />
           </div>
         )}
 
@@ -134,14 +195,16 @@ export default function RideStopPage({
               <div className="ride-next-label">Next stop</div>
               <div className="ride-next-name">{nextStop.name}</div>
               <div className="ride-next-actions">
-                <a
-                  className="ride-btn ride-btn-maps"
-                  href={mapsNavUrl(nextStop.lat, nextStop.lng)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Open in Maps ↗
-                </a>
+                {canUseMaps && (
+                  <a
+                    className="ride-btn ride-btn-maps"
+                    href={mapsNavUrl(nextStop.lat, nextStop.lng)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Open in Maps ↗
+                  </a>
+                )}
                 <button className="ride-btn ride-btn-primary" onClick={onContinue}>
                   Continue →
                 </button>

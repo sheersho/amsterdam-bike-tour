@@ -201,6 +201,18 @@ export default function RideApp() {
     rideNavigate(`stop/${targetStop.id}`);
   }
 
+  function handleNavigateToStopIndex(targetIndex) {
+    if (targetIndex < 0 || targetIndex >= route.length) return;
+    const targetStop = route[targetIndex];
+    if (!targetStop) return;
+    const updated = patchSession({
+      current_stop_id: targetStop.id,
+      last_content_url: `/ride/stop/${targetStop.id}`,
+    });
+    setSession(updated);
+    rideNavigate(`stop/${targetStop.id}`);
+  }
+
   function handleGoHome() {
     window.history.pushState({}, '', '/');
     window.dispatchEvent(new PopStateEvent('popstate'));
@@ -310,6 +322,7 @@ export default function RideApp() {
         <RideStopPage
           stop={currentStop}
           nextStop={nextStop}
+          route={route}
           routeIndex={routeIndex}
           routeLength={route.length}
           session={session}
@@ -319,6 +332,7 @@ export default function RideApp() {
           onHome={handleGoHome}
           onPrevStop={() => handleNavigateByOffset(-1)}
           onNextStop={() => handleNavigateByOffset(1)}
+          onSelectStop={handleNavigateToStopIndex}
         />
         {showEmailModal && session && (
           <EmailSaveModal session={session} onDone={handleEmailModalDone} />

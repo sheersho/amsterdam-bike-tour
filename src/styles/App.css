@@ -873,11 +873,14 @@ body {
 .stop-top-nav {
   display: flex;
   align-items: center;
-  height: 60px;
-  padding: 0 12px;
-  gap: 8px;
-  background: #e7c8cf;
-  border-bottom: 1px solid #d8b2ba;
+  min-height: 68px;
+  padding: 10px 12px;
+  gap: 10px;
+  background:
+    radial-gradient(circle at 8% 18%, rgba(22, 50, 79, 0.08), transparent 42%),
+    linear-gradient(180deg, #f8f4ee 0%, #f5f1ea 100%);
+  border-bottom: 1px solid rgba(22, 50, 79, 0.14);
+  box-shadow: 0 2px 10px rgba(12, 30, 48, 0.12);
   position: sticky;
   top: 0;
   z-index: 20;
@@ -886,15 +889,16 @@ body {
 .stop-top-nav-left {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
 .stop-top-nav-title {
   flex: 1;
   text-align: center;
-  font-size: 18px;
+  font-size: 19px;
   font-weight: 700;
-  color: #2a2a2a;
+  color: #15283b;
+  letter-spacing: 0.01em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -905,34 +909,38 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  background: transparent;
-  border: none;
-  border-radius: 10px;
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(22, 50, 79, 0.16);
+  border-radius: 14px;
   cursor: pointer;
-  font-size: 46px;
+  font-size: 34px;
   line-height: 1;
-  color: #111;
+  color: #16324f;
   flex-shrink: 0;
   -webkit-tap-highlight-color: transparent;
-  transition: background 0.12s, transform 0.1s, opacity 0.1s;
+  transition: background 0.12s, transform 0.1s, opacity 0.1s, box-shadow 0.12s;
   /* Extend tap area without changing visual size */
   touch-action: manipulation;
   padding: 0;
+  box-shadow: 0 1px 2px rgba(13, 27, 39, 0.08);
 }
 
 .stop-top-nav-btn:active {
-  background: rgba(255, 255, 255, 0.3);
-  transform: scale(0.91);
+  background: rgba(255, 255, 255, 0.9);
+  transform: scale(0.95);
+  box-shadow: 0 2px 8px rgba(13, 27, 39, 0.16) inset;
 }
 
 .stop-top-nav-btn-home {
-  color: #111;
+  color: #8b1a2b;
+  border-color: rgba(139, 26, 43, 0.26);
+  background: rgba(139, 26, 43, 0.08);
 }
 
 .stop-top-nav-btn-home:active {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(139, 26, 43, 0.14);
 }
 
 .stop-top-nav-btn:disabled {
