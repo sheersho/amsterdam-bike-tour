@@ -400,6 +400,194 @@
   text-shadow: 0 1px 4px rgba(0,0,0,0.3);
 }
 
+/* ── Quick-action bar (Audio + Maps) ─────────────────────────────────────── */
+.ride-stop-quickbar {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid #ece9f0;
+  background: #fff;
+}
+
+.ride-stop-quickbar-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 11px 0;
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: #2d2d3e;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.12s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ride-stop-quickbar-btn:hover {
+  background: #f5f3fa;
+}
+
+.ride-stop-quickbar-btn + .ride-stop-quickbar-btn {
+  border-left: 1px solid #ece9f0;
+}
+
+.ride-stop-quickbar-icon {
+  font-size: 16px;
+}
+
+/* ── Audio modal ─────────────────────────────────────────────────────────── */
+.audio-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 10, 20, 0.52);
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.audio-modal {
+  background: #fff;
+  border-radius: 22px 22px 0 0;
+  padding: 28px 24px 36px;
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.audio-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.audio-modal-icon-wrap {
+  font-size: 32px;
+  line-height: 1;
+}
+
+.audio-modal-meta {
+  flex: 1;
+}
+
+.audio-modal-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #9ca3af;
+}
+
+.audio-modal-stop-name {
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-top: 2px;
+}
+
+.audio-modal-close-btn {
+  background: #f3f0f8;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #6b6375;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.audio-modal-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+}
+
+.audio-modal-status-label {
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+/* Animated sound wave bars */
+.audio-wave {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 32px;
+}
+
+.audio-wave span {
+  display: block;
+  width: 4px;
+  border-radius: 2px;
+  background: #2563eb;
+  animation: audio-wave-bounce 1s ease-in-out infinite;
+}
+
+.audio-wave span:nth-child(1) { height: 10px; animation-delay: 0s; }
+.audio-wave span:nth-child(2) { height: 22px; animation-delay: 0.1s; }
+.audio-wave span:nth-child(3) { height: 32px; animation-delay: 0.2s; }
+.audio-wave span:nth-child(4) { height: 22px; animation-delay: 0.3s; }
+.audio-wave span:nth-child(5) { height: 10px; animation-delay: 0.4s; }
+
+@keyframes audio-wave-bounce {
+  0%, 100% { transform: scaleY(0.5); opacity: 0.6; }
+  50%       { transform: scaleY(1);   opacity: 1; }
+}
+
+.audio-modal-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.audio-modal-btn {
+  flex: 1;
+  padding: 11px 8px;
+  border: 1.5px solid #e5e2ee;
+  border-radius: 12px;
+  background: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: #2d2d3e;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+}
+
+.audio-modal-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.audio-modal-btn-primary {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+}
+
+.audio-modal-btn-primary:disabled {
+  background: #9ca3af;
+  border-color: #9ca3af;
+}
+
+.audio-modal-note {
+  font-size: 11px;
+  color: #9ca3af;
+  text-align: center;
+  margin: -8px 0 0;
+}
+
 .ride-stop-content {
   flex: 1;
   display: flex;

@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { mapsNavUrl, FREE_STOP_COUNT } from '../../data/rideRoutes';
 import { updateSessionStop } from '../../lib/rideApi';
 import { TOUR_PRICE_DISPLAY } from '../../lib/rideApi';
+import AudioModal from './AudioModal';
 
 export default function RideStopPage({
   stop,
@@ -20,6 +21,8 @@ export default function RideStopPage({
   canGoPrev = true,
   canGoNext = true,
 }) {
+  const [audioOpen, setAudioOpen] = useState(false);
+
   // When payments are disabled by staff, treat every user as paid
   const hasPaidAccess = session?.is_paid === true;
   const isPaid = hasPaidAccess || !paymentsEnabled;
@@ -55,6 +58,7 @@ export default function RideStopPage({
   const paragraphs = (stop.narrative || '').split(/\n\n+/).filter(Boolean);
 
   return (
+    <>
     <div className="ride-page ride-stop-page">
       {/* Sticky header */}
       <div className="ride-stop-header">
@@ -104,6 +108,26 @@ export default function RideStopPage({
         <div className="ride-stop-hero-overlay">
           <h1 className="ride-stop-hero-title">{stop.name}</h1>
         </div>
+      </div>
+
+      {/* Quick-action bar */}
+      <div className="ride-stop-quickbar">
+        <button
+          className="ride-stop-quickbar-btn"
+          onClick={() => setAudioOpen(true)}
+        >
+          <span className="ride-stop-quickbar-icon">🎧</span>
+          Audio
+        </button>
+        <a
+          className="ride-stop-quickbar-btn"
+          href={mapsNavUrl(stop.lat, stop.lng)}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span className="ride-stop-quickbar-icon">📍</span>
+          Open in Maps
+        </a>
       </div>
 
       {/* Stops card (always visible) */}
@@ -243,5 +267,10 @@ export default function RideStopPage({
         </div>
       </div>
     </div>
+
+    {audioOpen && (
+      <AudioModal stop={stop} onClose={() => setAudioOpen(false)} />
+    )}
+    </>
   );
 }
