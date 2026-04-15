@@ -187,6 +187,11 @@ export default function RideApp() {
     rideNavigate(`stop/${nextStop.id}`);
   }
 
+  function handleGoHome() {
+    window.history.pushState({}, '', '/');
+    window.dispatchEvent(new PopStateEvent('popstate'));
+  }
+
   function handlePaywall() {
     if (!currentStop) return;
     // Store the current stop URL before navigating away
@@ -297,6 +302,7 @@ export default function RideApp() {
           paymentsEnabled={paymentsEnabled}
           onContinue={handleContinueToNextStop}
           onPaywall={handlePaywall}
+          onHome={handleGoHome}
         />
         {showEmailModal && session && (
           <EmailSaveModal session={session} onDone={handleEmailModalDone} />

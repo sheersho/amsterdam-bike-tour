@@ -874,11 +874,10 @@ body {
   display: flex;
   align-items: center;
   height: 60px;
-  padding: 0 10px;
-  gap: 6px;
-  background: #fff;
-  border-bottom: 1px solid #e8e8e8;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.07);
+  padding: 0 12px;
+  gap: 8px;
+  background: #e7c8cf;
+  border-bottom: 1px solid #d8b2ba;
   position: sticky;
   top: 0;
   z-index: 20;
@@ -893,9 +892,9 @@ body {
 .stop-top-nav-title {
   flex: 1;
   text-align: center;
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 700;
-  color: #1a1a2e;
+  color: #2a2a2a;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -906,34 +905,34 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
-  background: #f2f2f2;
+  width: 40px;
+  height: 40px;
+  background: transparent;
   border: none;
-  border-radius: 14px;
+  border-radius: 10px;
   cursor: pointer;
-  font-size: 22px;
+  font-size: 46px;
   line-height: 1;
-  color: #1a1a2e;
+  color: #111;
   flex-shrink: 0;
   -webkit-tap-highlight-color: transparent;
-  transition: background 0.12s, transform 0.1s;
+  transition: background 0.12s, transform 0.1s, opacity 0.1s;
   /* Extend tap area without changing visual size */
   touch-action: manipulation;
+  padding: 0;
 }
 
 .stop-top-nav-btn:active {
-  background: #e0e0e0;
+  background: rgba(255, 255, 255, 0.3);
   transform: scale(0.91);
 }
 
 .stop-top-nav-btn-home {
-  background: #f5eaec;
-  color: #8b1a2b;
+  color: #111;
 }
 
 .stop-top-nav-btn-home:active {
-  background: #e8d2d5;
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .stop-top-nav-btn:disabled {

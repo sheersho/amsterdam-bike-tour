@@ -60,10 +60,11 @@ export default function StopPage({ stop, stopIndex, stops, onNav, onHome, isPaid
       {/* Top navigation bar */}
       <div className="stop-top-nav">
         <div className="stop-top-nav-left">
-          <button className="stop-top-nav-btn stop-top-nav-btn-home" onClick={onHome} aria-label="Home">
+          <button type="button" className="stop-top-nav-btn stop-top-nav-btn-home" onClick={onHome} aria-label="Home">
             «
           </button>
           <button
+            type="button"
             className="stop-top-nav-btn"
             onClick={() => onNav(stopIndex - 1)}
             disabled={stopIndex === 0}
@@ -74,6 +75,7 @@ export default function StopPage({ stop, stopIndex, stops, onNav, onHome, isPaid
         </div>
         <span className="stop-top-nav-title">{stop.name}</span>
         <button
+          type="button"
           className="stop-top-nav-btn"
           onClick={() => onNav(stopIndex + 1)}
           disabled={stopIndex >= stops.length - 1}
@@ -98,16 +100,16 @@ export default function StopPage({ stop, stopIndex, stops, onNav, onHome, isPaid
       {/* Navigation row — always visible */}
       <div className={`next-btn-container ${stopIndex === 0 ? "first-stop" : ""}`}>
         {stopIndex > 0 && (
-          <button className="prev-btn" onClick={() => onNav(stopIndex - 1)}>
+          <button type="button" className="prev-btn" onClick={() => onNav(stopIndex - 1)}>
             ← Previous
           </button>
         )}
         {stopIndex < stops.length - 1 ? (
-          <button className="next-btn" onClick={() => onNav(stopIndex + 1)}>
+          <button type="button" className="next-btn" onClick={() => onNav(stopIndex + 1)}>
             Next Location →
           </button>
         ) : (
-          <button className="next-btn" onClick={onHome}>
+          <button type="button" className="next-btn" onClick={onHome}>
             ✓ Finish Tour
           </button>
         )}
@@ -208,16 +210,16 @@ export default function StopPage({ stop, stopIndex, stops, onNav, onHome, isPaid
       {isPaid && (
         <div className={`next-btn-container ${stopIndex === 0 ? "first-stop" : ""}`}>
           {stopIndex > 0 && (
-            <button className="prev-btn" onClick={() => onNav(stopIndex - 1)}>
+            <button type="button" className="prev-btn" onClick={() => onNav(stopIndex - 1)}>
               ← Previous
             </button>
           )}
           {stopIndex < stops.length - 1 ? (
-            <button className="next-btn" onClick={() => onNav(stopIndex + 1)}>
+            <button type="button" className="next-btn" onClick={() => onNav(stopIndex + 1)}>
               Next Location →
             </button>
           ) : (
-            <button className="next-btn" onClick={onHome}>
+            <button type="button" className="next-btn" onClick={onHome}>
               ✓ Finish Tour
             </button>
           )}

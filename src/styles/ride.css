@@ -310,6 +310,19 @@
   font-weight: 600;
   color: #9ca3af;
   min-width: 48px;
+  text-align: right;
+}
+
+.ride-stop-header-home-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0 4px;
+  color: #4b2e83;
+  min-width: 48px;
+  text-align: left;
+  line-height: 1;
 }
 
 .ride-stop-progress-spacer {

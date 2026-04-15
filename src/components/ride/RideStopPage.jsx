@@ -12,6 +12,7 @@ export default function RideStopPage({
   paymentsEnabled = true,
   onContinue,
   onPaywall,
+  onHome,
 }) {
   // When payments are disabled by staff, treat every user as paid
   const isPaid = session?.is_paid || !paymentsEnabled;
@@ -42,11 +43,13 @@ export default function RideStopPage({
     <div className="ride-page ride-stop-page">
       {/* Sticky header */}
       <div className="ride-stop-header">
+        <button className="ride-stop-header-home-btn" onClick={onHome} aria-label="Home">
+          «
+        </button>
+        <span className="ride-stop-name-label">{stop.name}</span>
         <span className="ride-stop-progress">
           {routeIndex + 1} / {routeLength}
         </span>
-        <span className="ride-stop-name-label">{stop.name}</span>
-        <span className="ride-stop-progress-spacer" />
       </div>
 
       {/* Hero image */}
