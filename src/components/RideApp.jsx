@@ -47,6 +47,10 @@ function rideNavigate(subpath, { replace = false } = {}) {
   window.dispatchEvent(new PopStateEvent('popstate'));
 }
 
+function scrollToTopInstant() {
+  window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+}
+
 // ─── RideApp ─────────────────────────────────────────────────────────────────
 
 export default function RideApp() {
@@ -195,6 +199,7 @@ export default function RideApp() {
     });
     setSession(updated);
     rideNavigate(`stop/${nextStop.id}`);
+    scrollToTopInstant();
   }
 
   function handleNavigateByOffset(offset) {
@@ -209,6 +214,7 @@ export default function RideApp() {
     });
     setSession(updated);
     rideNavigate(`stop/${targetStop.id}`);
+    scrollToTopInstant();
   }
 
   function handleNavigateToStopIndex(targetIndex) {
@@ -221,6 +227,7 @@ export default function RideApp() {
     });
     setSession(updated);
     rideNavigate(`stop/${targetStop.id}`);
+    scrollToTopInstant();
   }
 
   function handleGoHome() {

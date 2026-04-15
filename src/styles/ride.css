@@ -655,8 +655,26 @@
 }
 
 /* ── Paywall page ────────────────────────────────────────────────────────────── */
+.ride-paywall-page {
+  background: #F4F6FA !important;
+  min-height: 100vh;
+}
+
+.ride-paywall-page .ride-page-title {
+  color: #1a1a2e;
+  text-align: center;
+}
+
 .ride-paywall-page-header {
   padding: 20px 20px 18px;
+}
+
+.ride-paywall-glass-header {
+  background: #fff;
+  border-bottom: 1px solid #e8e4f0;
+  padding: 22px 20px 18px;
+  text-align: center;
+  box-shadow: 0 1px 6px rgba(26, 26, 46, 0.06);
 }
 
 .ride-paywall-page-body {
@@ -668,11 +686,13 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
-  background: #1a1a2e;
+  background: #fff;
   border-radius: 22px;
   padding: 28px 22px;
-  color: #fff;
+  color: #1a1a2e;
   text-align: center;
+  box-shadow: 0 4px 24px rgba(26, 26, 46, 0.1);
+  border: 1px solid #ece9f4;
 }
 
 .ride-paywall-card-icon {
@@ -683,12 +703,12 @@
   font-family: 'Merriweather', Georgia, serif;
   font-size: 22px;
   font-weight: 700;
-  color: #fff;
+  color: #1a1a2e;
 }
 
 .ride-paywall-card-desc {
   font-size: 14px;
-  color: rgba(255,255,255,0.65);
+  color: #6b6375;
   margin-top: -4px;
 }
 
@@ -700,6 +720,9 @@
   flex-direction: column;
   gap: 8px;
   text-align: left;
+  background: #F8F7FC;
+  border-radius: 14px;
+  padding: 16px;
 }
 
 .ride-paywall-includes li {
@@ -707,12 +730,12 @@
   align-items: center;
   gap: 8px;
   font-size: 14px;
-  color: rgba(255,255,255,0.85);
+  color: #2d2d3e;
 }
 
 .ride-paywall-includes li::before {
   content: '✓';
-  color: #f5c842;
+  color: #16a34a;
   font-weight: 700;
   font-size: 15px;
   flex-shrink: 0;
@@ -730,23 +753,33 @@
   font-family: 'Merriweather', Georgia, serif;
   font-size: 40px;
   font-weight: 900;
-  color: #fff;
+  color: #1a1a2e;
 }
 
 .ride-paywall-one-time {
   font-size: 13px;
-  color: rgba(255,255,255,0.5);
+  color: #9ca3af;
 }
 
 .ride-paywall-pay-btn {
-  background: linear-gradient(135deg, #d4a017 0%, #f5c842 100%);
+  background: linear-gradient(135deg, #FACC15 0%, #F59E0B 100%);
   color: #1a1a2e;
-  box-shadow: 0 6px 18px rgba(212,160,23,0.35);
+  font-weight: 700;
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.32);
+}
+
+.ride-paywall-pay-btn:hover:not(:disabled) {
+  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.44);
+}
+
+.ride-paywall-pay-btn:active {
+  background: #EAB308;
+  transform: scale(0.98);
 }
 
 .ride-paywall-secure-note {
   font-size: 12px;
-  color: rgba(255,255,255,0.4);
+  color: #9ca3af;
   margin-top: -4px;
 }
 

@@ -36,7 +36,7 @@ export default function PaywallPage({ session, onBack }) {
 
   return (
     <div className="ride-page ride-paywall-page">
-      <div className="ride-paywall-page-header page-header">
+      <div className="ride-paywall-page-header ride-paywall-glass-header">
         <h1 className="ride-page-title">Unlock the full tour</h1>
       </div>
 
