@@ -1,15 +1,18 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 
+const SPEEDS = [1, 1.25, 1.5, 2];
+
 export default function AudioModal({ stop, onClose }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [speed, setSpeed] = useState(1);
   const utteranceRef = useRef(null);
   const text = stop.narrative || '';
 
-  const startSpeech = useCallback(() => {
+  const startSpeech = useCallback((overrideSpeed) => {
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 0.92;
+    utterance.rate = (overrideSpeed ?? speed) * 0.92;
     utterance.pitch = 1;
     utterance.onstart = () => { setIsPlaying(true); setIsPaused(false); };
     utterance.onend   = () => { setIsPlaying(false); setIsPaused(false); };
@@ -18,7 +21,14 @@ export default function AudioModal({ stop, onClose }) {
     window.speechSynthesis.speak(utterance);
     setIsPlaying(true);
     setIsPaused(false);
-  }, [text]);
+  }, [text, speed]);
+
+  function handleSpeedChange(s) {
+    setSpeed(s);
+    if (isPlaying || isPaused) {
+      startSpeech(s);
+    }
+  }
 
   const togglePause = useCallback(() => {
     if (isPaused) {
@@ -72,6 +82,18 @@ export default function AudioModal({ stop, onClose }) {
             {isPaused ? '▶ Resume' : '⏸ Pause'}
           </button>
           <button className="audio-modal-btn audio-modal-btn-stop" onClick={handleClose}>■ Stop</button>
+        </div>
+
+        <div className="audio-modal-speeds">
+          {SPEEDS.map(s => (
+            <button
+              key={s}
+              className={`audio-modal-speed-btn ${speed === s ? 'active' : ''}`}
+              onClick={() => handleSpeedChange(s)}
+            >
+              {s === 1 ? '1×' : `${s}×`}
+            </button>
+          ))}
         </div>
 
         <p className="audio-modal-note">

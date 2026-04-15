@@ -581,6 +581,31 @@
   border-color: #9ca3af;
 }
 
+.audio-modal-speeds {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.audio-modal-speed-btn {
+  padding: 6px 14px;
+  border: 1.5px solid #e5e2ee;
+  border-radius: 20px;
+  background: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b6375;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+}
+
+.audio-modal-speed-btn.active {
+  background: #eff6ff;
+  border-color: #2563eb;
+  color: #2563eb;
+}
+
 .audio-modal-note {
   font-size: 11px;
   color: #9ca3af;
