@@ -12,15 +12,14 @@ export default function AllStopsPage({ stops, onSelectStop, onHome }) {
           <button className="all-stops-back-btn" onClick={onHome}>←</button>
           <h1 className="all-stops-title">All Stops</h1>
         </div>
-        <p className="all-stops-subtitle">Tap any stop to explore</p>
+        <p className="all-stops-subtitle">Your Amsterdam bike tour route</p>
       </div>
 
       <div className="all-stops-list">
         {stops.map((stop, i) => (
           <div
             key={stop.id}
-            onClick={() => onSelectStop(i)}
-            className="all-stops-card"
+            className="all-stops-card all-stops-card-readonly"
           >
             <div className={`all-stops-thumb ${!stop.image ? `all-stops-thumb-color-${i + 1}` : ''}`}>
               {stop.image ? (
@@ -38,11 +37,7 @@ export default function AllStopsPage({ stops, onSelectStop, onHome }) {
               <div className="all-stops-card-title">
                 {i + 1}. {stop.name}
               </div>
-              <div className="all-stops-card-subtitle">
-                Tap to read & explore
-              </div>
             </div>
-            <span className="all-stops-card-chevron">›</span>
           </div>
         ))}
       </div>

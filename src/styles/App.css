@@ -784,6 +784,11 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+.all-stops-card-readonly {
+  cursor: default;
+  pointer-events: none;
+}
+
 .all-stops-thumb {
   width: 44px;
   height: 44px;

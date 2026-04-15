@@ -379,7 +379,7 @@ export default function App() {
         />
       )}
 
-      {route.path === '/tour' && !canAccessTour && page !== PAGE.STOP && (
+      {route.path === '/tour' && !canAccessTour && page !== PAGE.STOP && page !== PAGE.ALL_STOPS && (
         <LoginPage
           onRequestAccess={handleRequestAccess}
           initialEmail={expiredEmail}
@@ -445,9 +445,9 @@ export default function App() {
         />
       )}
 
-      {isTourReady && page === PAGE.ALL_STOPS && (
+      {route.path === '/tour' && page === PAGE.ALL_STOPS && (
         <AllStopsPage
-          stops={stops}
+          stops={isTourReady ? stops : STOPS}
           onSelectStop={goToStop}
           onHome={() => { setPage(PAGE.LANDING); window.scrollTo(0, 0); }}
         />
