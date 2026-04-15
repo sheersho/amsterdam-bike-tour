@@ -27,6 +27,7 @@ export default function RideStopPage({
   const canUseMaps = !paymentsEnabled || hasPaidAccess;
   const maxVisibleStopsForFree = 3;
   const shouldLimitStopsGrid = paymentsEnabled && !hasPaidAccess;
+  const lockedStopsCount = Math.max(0, routeLength - maxVisibleStopsForFree);
   // Index 0 always free. Index 1: full content shown but paywall blocks continuation.
   // Index 2+: full content only if paid, otherwise paywall gate.
   const showNarrative = routeIndex <= 1 || isPaid;
@@ -106,38 +107,56 @@ export default function RideStopPage({
       </div>
 
       {/* Stops card (always visible) */}
-      <div className="stops-nav">
+      <div className={`stops-nav ${shouldLimitStopsGrid ? 'stops-nav-locked' : ''}`}>
         <h3>Bike Stops</h3>
         <div className="stops-grid">
-          {route.map((routeStop, idx) => (
-            (() => {
+          {route.map((routeStop, idx) => {
               const isLocked = shouldLimitStopsGrid && idx >= maxVisibleStopsForFree;
               const isCurrent = idx === routeIndex;
+              const fadeStep = Math.max(0, idx - maxVisibleStopsForFree);
+              const lockedOpacity = Math.max(0.22, 0.64 - (fadeStep * 0.09));
               return (
-                <button
-                  type="button"
-                  key={routeStop.id}
-                  className={`stops-grid-item ${isCurrent ? 'current' : ''} ${isLocked ? 'locked' : ''}`}
-                  onClick={() => {
-                    if (isLocked) return;
-                    onSelectStop?.(idx);
-                  }}
-                  aria-label={isLocked ? `Locked stop ${idx + 1}` : `Go to stop ${idx + 1}: ${routeStop.name}`}
-                >
-                  <span className="num">{idx + 1}.</span>
-                  <span className="sname">{isLocked ? 'Locked stop' : routeStop.name}</span>
-                  {isLocked && (
-                    <span className="stops-lock-badge" aria-hidden="true">🔒</span>
+                <React.Fragment key={routeStop.id}>
+                  <button
+                    type="button"
+                    className={`stops-grid-item ${isCurrent ? 'current' : ''} ${isLocked ? 'locked' : ''}`}
+                    onClick={() => {
+                      if (isLocked) return;
+                      onSelectStop?.(idx);
+                    }}
+                    aria-label={isLocked ? `Locked stop ${idx + 1}` : `Go to stop ${idx + 1}: ${routeStop.name}`}
+                    style={isLocked ? { opacity: lockedOpacity } : undefined}
+                  >
+                    <span className="num">{idx + 1}.</span>
+                    <span className="sname">{isLocked ? 'Locked stop' : routeStop.name}</span>
+                    {isLocked && (
+                      <span className="stops-lock-badge" aria-hidden="true">🔒</span>
+                    )}
+                    {isCurrent && !isLocked && (
+                      <span className="current-tooltip current-tooltip-tick" role="status" aria-label="Current stop">
+                        ✓
+                      </span>
+                    )}
+                  </button>
+
+                  {shouldLimitStopsGrid && idx === maxVisibleStopsForFree - 1 && (
+                    <div className="stops-grid-inline-paywall">
+                      <button
+                        type="button"
+                        className="stops-grid-unlock-cta"
+                        onClick={onPaywall}
+                        aria-label={`Unlock ${lockedStopsCount} more stops for ${TOUR_PRICE_DISPLAY}`}
+                      >
+                        Unlock {lockedStopsCount} more stops for {TOUR_PRICE_DISPLAY}
+                      </button>
+                      <p className="stops-grid-unlock-subtext">
+                        Fast checkout. Apple Pay / Google Pay when available.
+                      </p>
+                    </div>
                   )}
-                  {isCurrent && !isLocked && (
-                    <span className="current-tooltip current-tooltip-tick" role="status" aria-label="Current stop">
-                      ✓
-                    </span>
-                  )}
-                </button>
+                </React.Fragment>
               );
-            })()
-          ))}
+            })}
         </div>
       </div>
 

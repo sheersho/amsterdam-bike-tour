@@ -414,6 +414,10 @@
   font-family: inherit;
 }
 
+.ride-stop-page .stops-nav.stops-nav-locked {
+  position: relative;
+}
+
 .ride-stop-page .stops-grid-item.locked {
   cursor: not-allowed;
 }
@@ -452,6 +456,47 @@
   margin-left: auto;
   font-size: 12px;
   opacity: 0.85;
+}
+
+.stops-grid-unlock-cta {
+  position: relative;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #a52437 0%, #8b1a2b 100%);
+  color: #fff;
+  padding: 12px 18px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(139, 26, 43, 0.35);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.stops-grid-unlock-cta:active {
+  transform: scale(0.97);
+}
+
+.stops-grid-inline-paywall {
+  grid-column: 1 / -1;
+  margin: 8px 0 4px;
+  padding: 12px;
+  border: 1px solid rgba(139, 26, 43, 0.16);
+  border-radius: 12px;
+  background: linear-gradient(180deg, #fffaf8 0%, #fff 100%);
+  text-align: center;
+}
+
+.stops-grid-inline-paywall .stops-grid-unlock-cta {
+  width: 100%;
+}
+
+.stops-grid-unlock-subtext {
+  margin-top: 8px;
+  font-size: 11px;
+  color: #6b6375;
+  line-height: 1.4;
 }
 
 .ride-stop-narrative {
