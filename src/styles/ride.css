@@ -297,42 +297,55 @@
   z-index: 20;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 10px 16px;
-  background: #fff;
-  border-bottom: 1px solid #ece9f4;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  padding: 0 12px;
+  gap: 8px;
+  height: 60px;
+  background: #e7c8cf;
+  border-bottom: 1px solid #d8b2ba;
 }
 
-.ride-stop-progress,
-.ride-stop-progress-spacer {
-  font-size: 13px;
-  font-weight: 600;
-  color: #9ca3af;
-  min-width: 48px;
-  text-align: right;
+.ride-stop-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ride-stop-header-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  color: #111;
+  font-size: 46px;
+  line-height: 1;
+  border-radius: 10px;
+  padding: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.12s, transform 0.1s, opacity 0.1s;
+}
+
+.ride-stop-header-btn:active {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(0.91);
+}
+
+.ride-stop-header-btn:disabled {
+  opacity: 0.22;
+  cursor: default;
 }
 
 .ride-stop-header-home-btn {
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  padding: 0 4px;
-  color: #4b2e83;
-  min-width: 48px;
-  text-align: left;
-  line-height: 1;
-}
-
-.ride-stop-progress-spacer {
-  text-align: right;
+  color: #111;
 }
 
 .ride-stop-name-label {
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 700;
-  color: #1a1a2e;
+  color: #2a2a2a;
   text-align: center;
   flex: 1;
   white-space: nowrap;
@@ -783,4 +796,3 @@
   font-size: 14px;
   color: #b91c1c;
 }
-

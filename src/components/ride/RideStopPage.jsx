@@ -13,6 +13,8 @@ export default function RideStopPage({
   onContinue,
   onPaywall,
   onHome,
+  onPrevStop,
+  onNextStop,
 }) {
   // When payments are disabled by staff, treat every user as paid
   const isPaid = session?.is_paid || !paymentsEnabled;
@@ -43,13 +45,35 @@ export default function RideStopPage({
     <div className="ride-page ride-stop-page">
       {/* Sticky header */}
       <div className="ride-stop-header">
-        <button className="ride-stop-header-home-btn" onClick={onHome} aria-label="Home">
-          «
-        </button>
+        <div className="ride-stop-header-left">
+          <button
+            type="button"
+            className="ride-stop-header-btn ride-stop-header-home-btn"
+            onClick={onHome}
+            aria-label="Home"
+          >
+            «
+          </button>
+          <button
+            type="button"
+            className="ride-stop-header-btn"
+            onClick={onPrevStop}
+            disabled={routeIndex === 0}
+            aria-label="Previous stop"
+          >
+            ‹
+          </button>
+        </div>
         <span className="ride-stop-name-label">{stop.name}</span>
-        <span className="ride-stop-progress">
-          {routeIndex + 1} / {routeLength}
-        </span>
+        <button
+          type="button"
+          className="ride-stop-header-btn"
+          onClick={onNextStop}
+          disabled={routeIndex >= routeLength - 1}
+          aria-label="Next stop"
+        >
+          ›
+        </button>
       </div>
 
       {/* Hero image */}
