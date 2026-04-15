@@ -696,12 +696,41 @@
   margin-top: -4px;
 }
 
-.ride-paywall-rating {
+.ride-paywall-stars {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: -6px;
+}
+
+.ride-paywall-star-icons {
+  color: #f59e0b;
+  font-size: 16px;
+  letter-spacing: 1px;
+}
+
+.ride-paywall-star-label {
   font-size: 13px;
   font-weight: 600;
-  color: #d97706;
-  margin-top: -6px;
-  letter-spacing: 0.01em;
+  color: #6b6375;
+}
+
+.ride-paywall-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 2px 7px;
+  border-radius: 20px;
+  vertical-align: middle;
+  margin-left: 6px;
+  text-transform: uppercase;
+}
+
+.ride-paywall-badge-green {
+  background: #dcfce7;
+  color: #16a34a;
 }
 
 .ride-paywall-includes {
@@ -742,7 +771,7 @@
 .ride-paywall-price-row {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: 10px;
   margin: 4px 0;
 }
@@ -755,22 +784,10 @@
   line-height: 1;
 }
 
-.ride-paywall-price-meta {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 2px;
-}
-
-.ride-paywall-one-time {
-  font-size: 13px;
-  color: #9ca3af;
-}
-
-.ride-paywall-instant {
+.ride-paywall-price-sub {
   font-size: 12px;
-  font-weight: 600;
-  color: #16a34a;
+  color: #9ca3af;
+  margin: 4px 0 0;
 }
 
 .ride-paywall-pay-btn {
@@ -791,17 +808,10 @@
 }
 
 .ride-paywall-trust-row {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  flex-wrap: wrap;
   font-size: 11px;
   color: #9ca3af;
+  text-align: center;
   margin-top: -2px;
-}
-
-.ride-paywall-trust-row span {
-  white-space: nowrap;
 }
 
 .ride-paywall-back-link {
