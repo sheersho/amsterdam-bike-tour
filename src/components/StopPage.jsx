@@ -95,6 +95,24 @@ export default function StopPage({ stop, stopIndex, stops, onNav, onHome, isPaid
         <div className="stop-hero-overlay" />
       </div>
 
+      {/* Navigation row — always visible */}
+      <div className={`next-btn-container ${stopIndex === 0 ? "first-stop" : ""}`}>
+        {stopIndex > 0 && (
+          <button className="prev-btn" onClick={() => onNav(stopIndex - 1)}>
+            ← Previous
+          </button>
+        )}
+        {stopIndex < stops.length - 1 ? (
+          <button className="next-btn" onClick={() => onNav(stopIndex + 1)}>
+            Next Location →
+          </button>
+        ) : (
+          <button className="next-btn" onClick={onHome}>
+            ✓ Finish Tour
+          </button>
+        )}
+      </div>
+
       {/* Toggle bar — paid only */}
       {isPaid && (
         <div className="toggle-bar">
