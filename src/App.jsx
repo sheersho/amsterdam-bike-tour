@@ -238,13 +238,6 @@ export default function App() {
   }, [authState, authToken, canAccessTour, contentReloadCount, isDevBypass, route.path]);
 
   const goToStop = (i) => {
-    if (!canAccessTour) {
-      setPendingRoute({ page: PAGE.STOP, stopIndex: i });
-      updateLocation('/tour');
-      window.scrollTo(0, 0);
-      return;
-    }
-
     setCurrentStop(i);
     setPage(PAGE.STOP);
     if (route.path !== '/tour') {
@@ -378,7 +371,7 @@ export default function App() {
         />
       )}
 
-      {route.path === '/tour' && !canAccessTour && (
+      {route.path === ‘/tour’ && !canAccessTour && page !== PAGE.STOP && (
         <LoginPage
           onRequestAccess={handleRequestAccess}
           initialEmail={expiredEmail}
@@ -387,6 +380,17 @@ export default function App() {
           helperText="We’ll email a one-tap access link that signs you in securely."
           buttonLabel="Sign Up"
           initialError={authInlineError}
+        />
+      )}
+
+      {route.path === ‘/tour’ && !canAccessTour && page === PAGE.STOP && (
+        <StopPage
+          stops={STOPS}
+          stop={STOPS[currentStop]}
+          stopIndex={currentStop}
+          onNav={goToStop}
+          onHome={() => { setPage(PAGE.LANDING); window.scrollTo(0, 0); }}
+          isPaid={false}
         />
       )}
 
@@ -448,6 +452,7 @@ export default function App() {
           stopIndex={currentStop}
           onNav={goToStop}
           onHome={() => { setPage(PAGE.LANDING); window.scrollTo(0, 0); }}
+          isPaid={true}
         />
       )}
 

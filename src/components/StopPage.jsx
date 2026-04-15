@@ -9,7 +9,7 @@ const UPCOMING_TOURS = [
   { name: 'Amsterdam South', emoji: '🎭', bgClass: 'tour-promo-img-south' },
 ];
 
-export default function StopPage({ stop, stopIndex, stops, onNav, onHome }) {
+export default function StopPage({ stop, stopIndex, stops, onNav, onHome, isPaid = true }) {
   const [showMap, setShowMap] = useState(false);
   const [isAudioModalOpen, setIsAudioModalOpen] = useState(false);
   const [audioLoadError, setAudioLoadError] = useState(false);
@@ -95,53 +95,57 @@ export default function StopPage({ stop, stopIndex, stops, onNav, onHome }) {
         <div className="stop-hero-overlay" />
       </div>
 
-      {/* Toggle bar */}
-      <div className="toggle-bar">
-        <button
-          className={`toggle-btn ${isAudioModalOpen ? "active" : ""}`}
-          onClick={() => {
-            setShowMap(false);
-            setAudioLoadError(false);
-            setIsAudioModalOpen(true);
-          }}
-        >
-          🎧 Audio
-        </button>
-        <button
-          className={`toggle-btn ${showMap ? "active" : ""}`}
-          onClick={() => {
-            setIsAudioModalOpen(false);
-            setShowMap(true);
-          }}
-        >
-          📍 View Map
-        </button>
-      </div>
-
-      {/* Stops Nav */}
-      <div className="stops-nav">
-        <h3>Bike Stops</h3>
-        <div className="stops-grid">
-          {stops.map((s, i) => (
-            <div
-              key={s.id}
-              className={`stops-grid-item ${i === stopIndex ? "current" : ""}`}
-              onClick={() => onNav(i)}
-            >
-              <span className="num">{i + 1}.</span>
-              <span className="sname">{s.name}</span>
-              {i === stopIndex && (
-                <span className="current-tooltip current-tooltip-tick" role="status" aria-label="Current stop">
-                  ✓
-                </span>
-              )}
-            </div>
-          ))}
+      {/* Toggle bar — paid only */}
+      {isPaid && (
+        <div className="toggle-bar">
+          <button
+            className={`toggle-btn ${isAudioModalOpen ? "active" : ""}`}
+            onClick={() => {
+              setShowMap(false);
+              setAudioLoadError(false);
+              setIsAudioModalOpen(true);
+            }}
+          >
+            🎧 Audio
+          </button>
+          <button
+            className={`toggle-btn ${showMap ? "active" : ""}`}
+            onClick={() => {
+              setIsAudioModalOpen(false);
+              setShowMap(true);
+            }}
+          >
+            📍 View Map
+          </button>
         </div>
-      </div>
+      )}
+
+      {/* Stops Nav — paid only */}
+      {isPaid && (
+        <div className="stops-nav">
+          <h3>Bike Stops</h3>
+          <div className="stops-grid">
+            {stops.map((s, i) => (
+              <div
+                key={s.id}
+                className={`stops-grid-item ${i === stopIndex ? "current" : ""}`}
+                onClick={() => onNav(i)}
+              >
+                <span className="num">{i + 1}.</span>
+                <span className="sname">{s.name}</span>
+                {i === stopIndex && (
+                  <span className="current-tooltip current-tooltip-tick" role="status" aria-label="Current stop">
+                    ✓
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Narrative or Map */}
-      {showMap ? (
+      {isPaid && showMap ? (
         <iframe
           className="map-embed"
           src={mapEmbedSrc}
@@ -155,8 +159,8 @@ export default function StopPage({ stop, stopIndex, stops, onNav, onHome }) {
         </div>
       )}
 
-      {/* Map always below narrative when not toggled */}
-      {!showMap && (
+      {/* Map always below narrative when not toggled — paid only */}
+      {isPaid && !showMap && (
         <iframe
           className="map-embed map-embed-spaced"
           src={mapEmbedSrc}
@@ -166,41 +170,45 @@ export default function StopPage({ stop, stopIndex, stops, onNav, onHome }) {
         />
       )}
 
-      {/* Other Tours */}
-      <div className="other-tours">
-        <h3>Self-guided bike tours</h3>
-        {UPCOMING_TOURS.map((t) => (
-          <div key={t.name} className="tour-promo-card">
-            <div className={`tour-promo-img ${t.bgClass}`}>{t.emoji}</div>
-            <div className="tour-promo-info">
-              <h4>{t.name}</h4>
-              <p>Coming Soon</p>
+      {/* Other Tours — paid only */}
+      {isPaid && (
+        <div className="other-tours">
+          <h3>Self-guided bike tours</h3>
+          {UPCOMING_TOURS.map((t) => (
+            <div key={t.name} className="tour-promo-card">
+              <div className={`tour-promo-img ${t.bgClass}`}>{t.emoji}</div>
+              <div className="tour-promo-info">
+                <h4>{t.name}</h4>
+                <p>Coming Soon</p>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
-      {/* Nav buttons */}
-      <div className={`next-btn-container ${stopIndex === 0 ? "first-stop" : ""}`}>
-        {stopIndex > 0 && (
-          <button className="prev-btn" onClick={() => onNav(stopIndex - 1)}>
-            ← Previous
-          </button>
-        )}
-        {stopIndex < stops.length - 1 ? (
-          <button className="next-btn" onClick={() => onNav(stopIndex + 1)}>
-            Next Location →
-          </button>
-        ) : (
-          <button className="next-btn" onClick={onHome}>
-            ✓ Finish Tour
-          </button>
-        )}
-      </div>
+      {/* Nav buttons — paid only */}
+      {isPaid && (
+        <div className={`next-btn-container ${stopIndex === 0 ? "first-stop" : ""}`}>
+          {stopIndex > 0 && (
+            <button className="prev-btn" onClick={() => onNav(stopIndex - 1)}>
+              ← Previous
+            </button>
+          )}
+          {stopIndex < stops.length - 1 ? (
+            <button className="next-btn" onClick={() => onNav(stopIndex + 1)}>
+              Next Location →
+            </button>
+          ) : (
+            <button className="next-btn" onClick={onHome}>
+              ✓ Finish Tour
+            </button>
+          )}
+        </div>
+      )}
 
       <AmsterdamSkyline />
 
-      {isAudioModalOpen && (
+      {isPaid && isAudioModalOpen && (
         <div
           className="audio-modal-backdrop"
           role="presentation"
