@@ -128,6 +128,15 @@ export default function RideApp() {
   const nextStop = routeIndex >= 0 && routeIndex < route.length - 1
     ? route[routeIndex + 1]
     : null;
+  const MAX_VISIBLE_STOPS_FOR_FREE = 3;
+  const hasPaidAccess = Boolean(session?.is_paid);
+  const limitStopsByPayment = paymentsEnabled && !hasPaidAccess;
+
+  function canAccessRouteIndex(index) {
+    if (index < 0 || index >= route.length) return false;
+    if (!limitStopsByPayment) return true;
+    return index < MAX_VISIBLE_STOPS_FOR_FREE;
+  }
 
   // ── Session creation (called after entry point is chosen) ───────────────────
 
@@ -179,6 +188,7 @@ export default function RideApp() {
 
   function handleContinueToNextStop() {
     if (!nextStop) return;
+    if (!canAccessRouteIndex(routeIndex + 1)) return;
     const updated = patchSession({
       current_stop_id: nextStop.id,
       last_content_url: `/ride/stop/${nextStop.id}`,
@@ -190,7 +200,7 @@ export default function RideApp() {
   function handleNavigateByOffset(offset) {
     if (routeIndex < 0) return;
     const targetIndex = routeIndex + offset;
-    if (targetIndex < 0 || targetIndex >= route.length) return;
+    if (!canAccessRouteIndex(targetIndex)) return;
     const targetStop = route[targetIndex];
     if (!targetStop) return;
     const updated = patchSession({
@@ -202,7 +212,7 @@ export default function RideApp() {
   }
 
   function handleNavigateToStopIndex(targetIndex) {
-    if (targetIndex < 0 || targetIndex >= route.length) return;
+    if (!canAccessRouteIndex(targetIndex)) return;
     const targetStop = route[targetIndex];
     if (!targetStop) return;
     const updated = patchSession({
@@ -333,6 +343,8 @@ export default function RideApp() {
           onPrevStop={() => handleNavigateByOffset(-1)}
           onNextStop={() => handleNavigateByOffset(1)}
           onSelectStop={handleNavigateToStopIndex}
+          canGoPrev={routeIndex > 0 && canAccessRouteIndex(routeIndex - 1)}
+          canGoNext={routeIndex >= 0 && routeIndex < route.length - 1 && canAccessRouteIndex(routeIndex + 1)}
         />
         {showEmailModal && session && (
           <EmailSaveModal session={session} onDone={handleEmailModalDone} />

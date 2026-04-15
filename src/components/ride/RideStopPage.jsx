@@ -17,6 +17,8 @@ export default function RideStopPage({
   onPrevStop,
   onNextStop,
   onSelectStop,
+  canGoPrev = true,
+  canGoNext = true,
 }) {
   // When payments are disabled by staff, treat every user as paid
   const hasPaidAccess = session?.is_paid === true;
@@ -68,7 +70,7 @@ export default function RideStopPage({
             type="button"
             className="ride-stop-header-btn"
             onClick={onPrevStop}
-            disabled={routeIndex === 0}
+            disabled={!canGoPrev}
             aria-label="Previous stop"
           >
             ‹
@@ -79,7 +81,7 @@ export default function RideStopPage({
           type="button"
           className="ride-stop-header-btn"
           onClick={onNextStop}
-          disabled={routeIndex >= routeLength - 1}
+          disabled={!canGoNext}
           aria-label="Next stop"
         >
           ›
