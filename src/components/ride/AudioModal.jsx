@@ -7,15 +7,18 @@ export default function AudioModal({ stop, onClose }) {
   const [isPaused, setIsPaused] = useState(false);
   const [speed, setSpeed] = useState(1);
   const utteranceRef = useRef(null);
+  const charIndexRef = useRef(0);
   const text = stop.narrative || '';
 
-  const startSpeech = useCallback((overrideSpeed) => {
+  const startSpeech = useCallback((overrideSpeed, fromIndex = 0) => {
     window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
+    charIndexRef.current = fromIndex;
+    const utterance = new SpeechSynthesisUtterance(text.slice(fromIndex));
     utterance.rate = (overrideSpeed ?? speed) * 0.92;
     utterance.pitch = 1;
+    utterance.onboundary = (e) => { charIndexRef.current = fromIndex + e.charIndex; };
     utterance.onstart = () => { setIsPlaying(true); setIsPaused(false); };
-    utterance.onend   = () => { setIsPlaying(false); setIsPaused(false); };
+    utterance.onend   = () => { setIsPlaying(false); setIsPaused(false); charIndexRef.current = 0; };
     utterance.onerror = () => { setIsPlaying(false); setIsPaused(false); };
     utteranceRef.current = utterance;
     window.speechSynthesis.speak(utterance);
@@ -26,7 +29,7 @@ export default function AudioModal({ stop, onClose }) {
   function handleSpeedChange(s) {
     setSpeed(s);
     if (isPlaying || isPaused) {
-      startSpeech(s);
+      startSpeech(s, charIndexRef.current);
     }
   }
 
