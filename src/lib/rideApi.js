@@ -82,7 +82,11 @@ export async function createCheckout({ sessionId, lastContentUrl }) {
   const res = await fetch(`${API_BASE_URL}/ride/checkout`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ session_id: sessionId, last_content_url: lastContentUrl }),
+    body: JSON.stringify({
+      session_id: sessionId,
+      last_content_url: lastContentUrl,
+      app_base_url: window.location.origin,
+    }),
   });
   return handleRes(res);
 }

@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { pollSessionUntilPaid } from '../../lib/rideApi';
 import { patchSession, readSession, readReturnUrl, clearReturnUrl } from '../../lib/rideSession';
+
+const SUCCESS_DISPLAY_MS = 5000;
 
 // Mounted when Stripe redirects user back to /ride/return?ride_session=XYZ
 // Polls backend until is_paid = true, then navigates to last_content_url
 export default function PaymentReturnPage({ onPaymentConfirmed }) {
-  const [status, setStatus] = useState('polling'); // 'polling' | 'error'
+  const [status, setStatus] = useState('polling'); // 'polling' | 'success' | 'error'
   const [errorMsg, setErrorMsg] = useState('');
+  const pendingConfirm = useRef(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -16,6 +19,11 @@ export default function PaymentReturnPage({ onPaymentConfirmed }) {
       setStatus('error');
       setErrorMsg('Missing session ID in return URL. Please go back and try again.');
       return;
+    }
+
+    function showSuccessThenConfirm(session, returnUrl) {
+      pendingConfirm.current = { session, returnUrl };
+      setStatus('success');
     }
 
     async function confirm() {
@@ -34,7 +42,7 @@ export default function PaymentReturnPage({ onPaymentConfirmed }) {
             last_content_url: returnUrl,
           };
           clearReturnUrl();
-          onPaymentConfirmed(fakeSession, returnUrl);
+          showSuccessThenConfirm(fakeSession, returnUrl);
           return;
         }
 
@@ -64,7 +72,7 @@ export default function PaymentReturnPage({ onPaymentConfirmed }) {
           // Stripe only redirects to success_url on a confirmed charge. Use the
           // optimistic paid status we already set and send the user back to their stop.
           clearReturnUrl();
-          onPaymentConfirmed(
+          showSuccessThenConfirm(
             { session_id: rideSessionId, is_paid: true, paid_at: now, unlock_expires_at: optimisticExpiry },
             savedReturnUrl,
           );
@@ -87,7 +95,7 @@ export default function PaymentReturnPage({ onPaymentConfirmed }) {
           savedReturnUrl;
 
         clearReturnUrl();
-        onPaymentConfirmed(updated, returnUrl);
+        showSuccessThenConfirm(updated, returnUrl);
       } catch (err) {
         setStatus('error');
         setErrorMsg(err.message || 'Could not confirm your payment.');
@@ -96,6 +104,27 @@ export default function PaymentReturnPage({ onPaymentConfirmed }) {
 
     confirm();
   }, [onPaymentConfirmed]);
+
+  // Once success card is shown, navigate after SUCCESS_DISPLAY_MS
+  useEffect(() => {
+    if (status !== 'success') return;
+    const { session, returnUrl } = pendingConfirm.current;
+    const timer = setTimeout(() => onPaymentConfirmed(session, returnUrl), SUCCESS_DISPLAY_MS);
+    return () => clearTimeout(timer);
+  }, [status, onPaymentConfirmed]);
+
+  if (status === 'success') {
+    return (
+      <div className="ride-page ride-return-page">
+        <div className="ride-return-card">
+          <div className="ride-return-icon">🎉</div>
+          <h2>Payment confirmed!</h2>
+          <p className="ride-return-text">You&apos;ve unlocked the full tour.</p>
+          <p className="ride-return-subtext">Taking you back to your stop…</p>
+        </div>
+      </div>
+    );
+  }
 
   if (status === 'error') {
     // Graceful recovery: try returning to last known URL from localStorage
