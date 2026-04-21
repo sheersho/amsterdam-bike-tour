@@ -237,9 +237,8 @@ export default function RideApp() {
 
   function handlePaywall() {
     if (!currentStop) return;
-    // Store the current stop URL before navigating away
     const url = `/ride/stop/${currentStop.id}`;
-    const updated = patchSession({ last_content_url: url });
+    const updated = patchSession({ last_content_url: url, current_stop_id: currentStop.id });
     setSession(updated);
     rideNavigate('paywall');
   }
@@ -252,8 +251,11 @@ export default function RideApp() {
     const merged = patchSession(updatedServerSession);
     setSession(merged);
 
-    // Navigate to exact page user was on before paywall
-    const target = returnUrl.replace(/^https?:\/\/[^/]+/, ''); // strip domain if present
+    // Navigate back to the stop the user was on; fall back to current_stop_id
+    const resolvedUrl =
+      returnUrl ||
+      (merged.current_stop_id ? `/ride/stop/${merged.current_stop_id}` : '/ride');
+    const target = resolvedUrl.replace(/^https?:\/\/[^/]+/, ''); // strip domain if present
     window.history.replaceState({}, '', target);
     window.dispatchEvent(new PopStateEvent('popstate'));
 

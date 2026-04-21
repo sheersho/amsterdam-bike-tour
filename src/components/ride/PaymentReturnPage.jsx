@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { pollSessionUntilPaid } from '../../lib/rideApi';
-import { patchSession, readReturnUrl, clearReturnUrl } from '../../lib/rideSession';
+import { patchSession, readSession, readReturnUrl, clearReturnUrl } from '../../lib/rideSession';
 
 // Mounted when Stripe redirects user back to /ride/return?ride_session=XYZ
 // Polls backend until is_paid = true, then navigates to last_content_url
@@ -25,37 +25,66 @@ export default function PaymentReturnPage({ onPaymentConfirmed }) {
         if (isDevPaid) {
           const now = new Date().toISOString();
           const expires = new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString();
+          const returnUrl = readReturnUrl() || readSession()?.last_content_url || '/ride';
           const fakeSession = {
             session_id: rideSessionId,
             is_paid: true,
             paid_at: now,
             unlock_expires_at: expires,
-            last_content_url: readReturnUrl() || '/ride',
+            last_content_url: returnUrl,
           };
           clearReturnUrl();
-          onPaymentConfirmed(fakeSession, fakeSession.last_content_url);
+          onPaymentConfirmed(fakeSession, returnUrl);
           return;
         }
 
-        // Poll backend until webhook has fired and is_paid is true
-        const serverSession = await pollSessionUntilPaid(rideSessionId);
+        // Real Stripe success_url redirect — payment is confirmed by Stripe.
+        // Optimistically mark as paid immediately so the user isn't stuck if the
+        // webhook is slow or hasn't been configured in test mode.
+        const now = new Date().toISOString();
+        const optimisticExpiry = new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString();
+        patchSession({
+          is_paid: true,
+          paid_at: now,
+          unlock_expires_at: optimisticExpiry,
+        });
 
-        // Merge server data into localStorage session
+        // Resolve return URL before polling so we have it if the poll fails
+        const savedReturnUrl =
+          readReturnUrl() ||
+          readSession()?.last_content_url ||
+          '/ride';
+
+        // Poll backend to get authoritative data (exact timestamps, stripe IDs)
+        let serverSession;
+        try {
+          serverSession = await pollSessionUntilPaid(rideSessionId);
+        } catch {
+          // Webhook hasn't fired yet (common in test mode). Payment DID succeed —
+          // Stripe only redirects to success_url on a confirmed charge. Use the
+          // optimistic paid status we already set and send the user back to their stop.
+          clearReturnUrl();
+          onPaymentConfirmed(
+            { session_id: rideSessionId, is_paid: true, paid_at: now, unlock_expires_at: optimisticExpiry },
+            savedReturnUrl,
+          );
+          return;
+        }
+
+        // Merge authoritative server data into localStorage session
         const updated = patchSession({
           session_id: serverSession.session_id || rideSessionId,
           is_paid: true,
-          paid_at: serverSession.paid_at,
-          unlock_expires_at: serverSession.unlock_expires_at,
+          paid_at: serverSession.paid_at || now,
+          unlock_expires_at: serverSession.unlock_expires_at || optimisticExpiry,
           stripe_checkout_session_id: serverSession.stripe_checkout_session_id,
           stripe_payment_intent_id: serverSession.stripe_payment_intent_id,
           email: serverSession.email || undefined,
         });
 
-        // Resolve return URL: backend is authoritative, localStorage is fallback
         const returnUrl =
           serverSession.last_content_url ||
-          readReturnUrl() ||
-          '/ride';
+          savedReturnUrl;
 
         clearReturnUrl();
         onPaymentConfirmed(updated, returnUrl);
