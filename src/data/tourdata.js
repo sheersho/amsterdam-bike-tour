@@ -247,7 +247,7 @@ export const STOPS = [
         text: `From Vondelpark, continue toward Museumplein.\n\nYou are moving from Amsterdam's place to unwind… to its place to impress.\n\nGrass gives way to grand buildings, open lawns to grand statements.\n\nSame city. Different kind of performance.`,
       },
     ],
-    routeImage: "https://drive.google.com/uc?export=view&id=1ZvZXBLBBXJCk2paw4nvtCSvhIrZArFtQ",
+    routeImage: "https://app.billsbiketour.com/wp-content/uploads/2025/11/Screenshot-2025-11-02-at-9.21.02-PM.png",
     routeMapsUrl: "https://www.google.com/maps/d/viewer?mid=11nFSgzET6mGm7FS1H2glOgDOuSisxu8",
     get narrative() { return this.sections[0].text; },
   },
