@@ -248,7 +248,7 @@ export const STOPS = [
       },
     ],
     routeImage: "https://i.postimg.cc/NftHs28X/Screenshot-2026-04-23-at-6-59-46-PM.png",
-    routeMapsUrl: "https://www.google.com/maps/d/viewer?mid=11nFSgzET6mGm7FS1H2glOgDOuSisxu8",
+    routeMapsUrl: "https://www.google.com/maps/d/viewer?mid=1cDTh2I_Lesp7dDPKWcd4_DbEHM0fkEw",
     get narrative() { return this.sections[0].text; },
   },
   {
