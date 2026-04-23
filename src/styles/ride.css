@@ -350,6 +350,7 @@
 }
 
 .ride-stop-name-label {
+  font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
   font-size: 19px;
   font-weight: 700;
   color: #15283b;
