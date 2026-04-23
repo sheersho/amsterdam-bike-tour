@@ -217,7 +217,8 @@ body {
 .cta-btn-full {
   width: 100%;
   padding: 16px 20px;
-  font-size: 17px;
+  font-size: 20px;
+  letter-spacing: 0.06em;
 }
 
 .choose-section h2 {
