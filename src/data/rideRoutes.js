@@ -66,7 +66,7 @@ export function nearestEntryPoint(userLat, userLng) {
 
 // Universal Google Maps navigation link (works on iOS + Android)
 export function mapsNavUrl(destLat, destLng) {
-  return `https://www.google.com/maps/dir/?api=1&destination=${destLat},${destLng}`;
+  return `https://www.google.com/maps/dir/?api=1&destination=${destLat},${destLng}&travelmode=bicycling`;
 }
 
 // Number of free stops from the start of the ride (index 0 and 1)
