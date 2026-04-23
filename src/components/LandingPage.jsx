@@ -30,11 +30,7 @@ export default function LandingPage({ faq, onViewAll, onStopByStop, onFindNeares
       </div>
 
       <div className="choose-section">
-        <h2>Choose how you want to explore the route:</h2>
-        <div className="cta-row">
-          <button className="cta-btn cta-btn-outline" onClick={onViewAll}>View Entire Route</button>
-          <button className="cta-btn cta-btn-filled" onClick={onStopByStop}>Go Stop by Stop</button>
-        </div>
+        <button className="cta-btn cta-btn-filled cta-btn-full" onClick={onStopByStop}>Start the Tour</button>
       </div>
 
       <div className="reassurance">
