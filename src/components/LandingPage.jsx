@@ -10,7 +10,7 @@ export default function LandingPage({ faq, onViewAll, onStopByStop, onFindNeares
         <p className="landing-subtitle">Amsterdam</p>
       </div>
 
-      <div className="route-card">
+      <div className="route-card" onClick={onViewAll} style={{ cursor: 'pointer' }}>
         <div className="route-card-media">
            <div className="route-card-img-placeholder">
             <img

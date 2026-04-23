@@ -355,7 +355,7 @@ export default function App() {
       {route.path === '/' && (
         <LandingPage
           faq={FAQ}
-          onViewAll={goToAllStops}
+          onViewAll={() => updateLocation('/ride')}
           onStopByStop={() => updateLocation('/ride')}
           onFindNearestStart={goToNearestStart}
         />
@@ -439,7 +439,7 @@ export default function App() {
       {isTourReady && page === PAGE.LANDING && (
         <LandingPage
           faq={faq}
-          onViewAll={goToAllStops}
+          onViewAll={() => goToStop(0)}
           onStopByStop={() => goToStop(0)}
           onFindNearestStart={goToNearestStart}
         />
