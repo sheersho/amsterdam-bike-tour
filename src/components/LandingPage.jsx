@@ -35,13 +35,6 @@ export default function LandingPage({ faq, onViewAll, onStopByStop, onFindNeares
           <button className="cta-btn cta-btn-outline" onClick={onViewAll}>View Entire Route</button>
           <button className="cta-btn cta-btn-filled" onClick={onStopByStop}>Go Stop by Stop</button>
         </div>
-        <button className="location-cta" onClick={onFindNearestStart}>
-          <span className="location-cta-kicker">AI Smart Start</span>
-          <span className="location-cta-title">Find Your Nearest Start</span>
-          <span className="location-cta-copy">
-            Let AI use your live location to send you to the closest recommended stop.
-          </span>
-        </button>
       </div>
 
       <div className="reassurance">
