@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AmsterdamSkyline from './AmsterdamSkyline';
 import { cityCenterImages } from '../data/images';
 
 export default function LandingPage({ faq, onViewAll, onStopByStop, onFindNearestStart }) {
+  const [openFaq, setOpenFaq] = useState(0);
+
   return (
     <div>
       <div className="landing-hero page-header">
@@ -39,19 +41,27 @@ export default function LandingPage({ faq, onViewAll, onStopByStop, onFindNeares
 
       <div className="faq-section">
         <h2 className="faq-title">Frequently Asked Questions</h2>
-        {faq.map((item, i) => (
-          <div key={i} className="faq-item">
-            <div className="faq-q">{i + 1}. {item.q}</div>
-            <div className="faq-a">
-              {Array.isArray(item.a) ? (
-                <ul>{item.a.map((li, j) => <li key={j}>{li}</li>)}</ul>
-              ) : (
-                <p>{item.a}</p>
+        {faq.map((item, i) => {
+          const isOpen = openFaq === i;
+          return (
+            <div key={i} className={`faq-item${isOpen ? ' faq-item-open' : ''}`}>
+              <button className="faq-q" onClick={() => setOpenFaq(isOpen ? null : i)}>
+                <span>{i + 1}. {item.q}</span>
+                <span className="faq-chevron">{isOpen ? '▲' : '▼'}</span>
+              </button>
+              {isOpen && (
+                <div className="faq-a">
+                  {Array.isArray(item.a) ? (
+                    <ul>{item.a.map((li, j) => <li key={j}>{li}</li>)}</ul>
+                  ) : (
+                    <p>{item.a}</p>
+                  )}
+                  {item.note && <div className="faq-note">{item.note}</div>}
+                </div>
               )}
-              {item.note && <div className="faq-note">{item.note}</div>}
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <AmsterdamSkyline />
