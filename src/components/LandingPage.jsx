@@ -32,7 +32,7 @@ export default function LandingPage({ faq, onViewAll, onStopByStop, onFindNeares
       </div>
 
       <div className="choose-section">
-        <button className="cta-btn cta-btn-filled cta-btn-full" onClick={onStopByStop}>START THE TOUR &rarr;</button>
+        <button className="cta-btn cta-btn-filled cta-btn-full" onClick={onStopByStop}>START YOUR RIDE &rarr;</button>
       </div>
 
       <div className="reassurance">
