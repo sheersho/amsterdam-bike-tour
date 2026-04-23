@@ -550,11 +550,40 @@
 }
 
 /* ── Route image ──────────────────────────────────────────────────────────── */
-.ride-stop-route-img-wrap {
+.ride-stop-route-card {
   margin: 10px 0 0;
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
   border: 1px solid #e7e2d9;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(26, 26, 46, 0.08);
+}
+
+.ride-stop-route-card-header {
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, #8b1a2b 0%, #a52437 100%);
+}
+
+.ride-stop-route-card-label {
+  font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  letter-spacing: 0.01em;
+}
+
+.ride-stop-route-card-arrow {
+  opacity: 0.75;
+  font-size: 13px;
+}
+
+.ride-stop-route-img-wrap {
+  display: block;
 }
 
 .ride-stop-route-img {

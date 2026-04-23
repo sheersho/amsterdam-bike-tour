@@ -252,20 +252,28 @@ export default function RideStopPage({
 
         {/* Custom route image */}
         {stop.routeImage && (
-          <a
-            className="ride-stop-route-img-wrap"
-            href={stop.routeMapsUrl || mapsHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={nextStop ? `View route to ${nextStop.name} in Maps` : 'View route in Maps'}
-          >
-            <img
-              className="ride-stop-route-img"
-              src={stop.routeImage}
-              alt={nextStop ? `Route from ${stop.name} to ${nextStop.name}` : `Route from ${stop.name}`}
-              loading="lazy"
-            />
-          </a>
+          <div className="ride-stop-route-card">
+            <div className="ride-stop-route-card-header">
+              <span className="ride-stop-route-card-label">
+                {stop.name}
+                {nextStop && <><span className="ride-stop-route-card-arrow">→</span>{nextStop.name}</>}
+              </span>
+            </div>
+            <a
+              className="ride-stop-route-img-wrap"
+              href={stop.routeMapsUrl || mapsHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={nextStop ? `View route to ${nextStop.name} in Maps` : 'View route in Maps'}
+            >
+              <img
+                className="ride-stop-route-img"
+                src={stop.routeImage}
+                alt={nextStop ? `Route from ${stop.name} to ${nextStop.name}` : `Route from ${stop.name}`}
+                loading="lazy"
+              />
+            </a>
+          </div>
         )}
       </div>
 
