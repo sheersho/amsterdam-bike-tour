@@ -11,9 +11,9 @@ if (!API_KEY) {
 const outDir = path.resolve('public/audio/stops');
 fs.mkdirSync(outDir, { recursive: true });
 
-// en-GB-Neural2-B: British male, warm and natural — great for tourism narration
-const VOICE = { languageCode: 'en-GB', name: 'en-GB-Neural2-B' };
-const AUDIO_CONFIG = { audioEncoding: 'MP3', speakingRate: 0.95, pitch: -1.0 };
+// en-US-Neural2-J: warm American male, natural and engaging for tourism narration
+const VOICE = { languageCode: 'en-US', name: 'en-US-Neural2-J' };
+const AUDIO_CONFIG = { audioEncoding: 'MP3', speakingRate: 0.93, pitch: -0.5 };
 
 function cleanText(raw) {
   return raw
