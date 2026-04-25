@@ -62,6 +62,9 @@ export default function RideStopPage({
       const idx = sections.findIndex(s => s.key === key);
       setOpenSectionKey(key);
       if (idx !== -1) playSection(idx);
+      setTimeout(() => {
+        document.getElementById(`section-${key}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 0);
     }
   }
 
@@ -182,7 +185,7 @@ export default function RideStopPage({
             const isOpen = openSectionKey === section.key;
             const paragraphs = section.text.split(/\n\n+/).filter(Boolean);
             return (
-              <div key={section.key} className={`ride-section ${isOpen ? 'ride-section--open' : ''}`}>
+              <div key={section.key} id={`section-${section.key}`} className={`ride-section ${isOpen ? 'ride-section--open' : ''}`}>
                 <button
                   type="button"
                   className="ride-section-header"
