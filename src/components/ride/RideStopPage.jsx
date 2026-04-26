@@ -95,9 +95,9 @@ export default function RideStopPage({
     setOpenSectionKey(null);
   }
 
-  const mapsHref = stop.routeMapsUrl || (nextStop
-    ? mapsNavUrl(nextStop.lat, nextStop.lng)
-    : mapsNavUrl(stop.lat, stop.lng));
+  // If the stop has a custom map URL (e.g. Vondelpark area map), use it for the button too
+  const navUrl = nextStop ? mapsNavUrl(nextStop.lat, nextStop.lng) : mapsNavUrl(stop.lat, stop.lng);
+  const mapsHref = stop.routeMapsUrl || navUrl;
 
   function renderStopButton(routeStop, idx) {
     const isLocked = shouldLimitStopsGrid && idx >= maxVisibleStopsForFree;
@@ -264,7 +264,7 @@ export default function RideStopPage({
             </div>
             <a
               className="ride-stop-route-img-wrap"
-              href={stop.routeMapsUrl || mapsHref}
+              href={mapsHref}
               target="_blank"
               rel="noopener noreferrer"
               aria-label={nextStop ? `View route to ${nextStop.name} in Maps` : 'View route in Maps'}
