@@ -12,6 +12,7 @@ export default function RideStopPage({
   session,
   paymentsEnabled = true,
   onContinue,
+  onNavigate,
   onPaywall,
   onHome,
   onPrevStop,
@@ -166,7 +167,14 @@ export default function RideStopPage({
         )}
       </div>
 
-      {/* Full-width CTA: open route to next stop */}
+      {/* Primary CTA: in-browser navigation */}
+      {nextStop && onNavigate && (
+        <button className="ride-navigate-btn" onClick={onNavigate}>
+          🗺️ Navigate to {nextStop.name}
+        </button>
+      )}
+
+      {/* Fallback: open in Google Maps */}
       <a
         className="ride-stop-maps-cta"
         href={mapsHref}
@@ -175,7 +183,7 @@ export default function RideStopPage({
         onClick={handleMapsClick}
         aria-label={nextStop ? `Open route to ${nextStop.name} in Maps` : 'Open location in Maps'}
       >
-        📌&thinsp;·&thinsp;·&thinsp;·&thinsp;🚲&thinsp;·&thinsp;·&thinsp;·&thinsp;📍&ensp;Open route to next stop
+        📌&thinsp;·&thinsp;·&thinsp;·&thinsp;🚲&thinsp;·&thinsp;·&thinsp;·&thinsp;📍&ensp;Open in Maps ↗
       </a>
 
       {/* Accordion sections */}
