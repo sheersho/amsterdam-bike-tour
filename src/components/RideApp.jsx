@@ -4,6 +4,7 @@ import { STOPS } from '../data/tourdata';
 import {
   ENTRY_POINTS,
   buildStopRouteFromEntry,
+  nearestEntryPoint,
 } from '../data/rideRoutes';
 import {
   readSession,
@@ -60,6 +61,8 @@ export default function RideApp() {
   const [createError, setCreateError] = useState('');
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [paymentsEnabled, setPaymentsEnabled] = useState(true);
+  const [detecting, setDetecting] = useState(false);
+  const [locationDenied, setLocationDenied] = useState(false);
 
   // Keep ridePath in sync with browser navigation (back/forward)
   useEffect(() => {
@@ -182,7 +185,25 @@ export default function RideApp() {
   // ── Navigation handlers ─────────────────────────────────────────────────────
 
   function handleStart() {
-    rideNavigate('location');
+    if (!navigator.geolocation) {
+      setLocationDenied(true);
+      return;
+    }
+    setDetecting(true);
+    setLocationDenied(false);
+    setCreateError('');
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { entryPoint, skipToNext } = nearestEntryPoint(pos.coords.latitude, pos.coords.longitude);
+        setDetecting(false);
+        startSession(entryPoint, skipToNext);
+      },
+      () => {
+        setDetecting(false);
+        setLocationDenied(true);
+      },
+      { timeout: 10000, maximumAge: 60000 },
+    );
   }
 
   function handleContinueExistingSession() {
@@ -310,14 +331,14 @@ export default function RideApp() {
       );
     }
     return (
-      <>
-        <RideLandingPage
-          existingSession={session}
-          onStart={handleStart}
-          onContinue={handleContinueExistingSession}
-        />
-        {createError && <p className="ride-create-error">{createError}</p>}
-      </>
+      <RideLandingPage
+        existingSession={session}
+        onStart={handleStart}
+        onContinue={handleContinueExistingSession}
+        detecting={detecting || creating}
+        locationDenied={locationDenied}
+        error={createError}
+      />
     );
   }
 

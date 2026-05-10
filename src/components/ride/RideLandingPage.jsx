@@ -1,7 +1,14 @@
 import React from 'react';
 import { sessionIsValid } from '../../lib/rideSession';
 
-export default function RideLandingPage({ existingSession, onStart, onContinue }) {
+export default function RideLandingPage({
+  existingSession,
+  onStart,
+  onContinue,
+  detecting = false,
+  locationDenied = false,
+  error = '',
+}) {
   const hasActiveSession = existingSession && sessionIsValid(existingSession);
 
   return (
@@ -32,14 +39,33 @@ export default function RideLandingPage({ existingSession, onStart, onContinue }
           </div>
         </div>
 
-        <button className="ride-btn ride-btn-primary" onClick={onStart}>
-          Start your ride
-        </button>
-
-        {hasActiveSession && (
-          <button className="ride-btn ride-btn-ghost" onClick={onContinue}>
-            Continue my tour →
-          </button>
+        {detecting ? (
+          <div className="ride-location-card ride-location-detecting">
+            <div className="ride-spinner" />
+            <p>Finding your nearest stop…</p>
+          </div>
+        ) : locationDenied ? (
+          <div className="ride-location-card">
+            <p className="ride-location-desc">
+              Location access is required to find your nearest stop.
+              Please allow it in your browser settings, then try again.
+            </p>
+            <button className="ride-btn ride-btn-primary" onClick={onStart}>
+              Try again
+            </button>
+          </div>
+        ) : (
+          <>
+            <button className="ride-btn ride-btn-primary" onClick={onStart}>
+              START YOUR RIDE →
+            </button>
+            {error && <p className="ride-error" style={{ textAlign: 'center', marginTop: 8 }}>{error}</p>}
+            {hasActiveSession && (
+              <button className="ride-btn ride-btn-ghost" onClick={onContinue}>
+                Continue my tour →
+              </button>
+            )}
+          </>
         )}
 
         <p className="ride-landing-note">No app · No account · Just ride</p>
