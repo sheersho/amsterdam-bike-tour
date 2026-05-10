@@ -53,6 +53,29 @@ export function nearestEntryPoint(userLat, userLng) {
   return { entryPoint: nearest, skipToNext: minDist < 0.05 };
 }
 
+// ─── Server compatibility ────────────────────────────────────────────────────
+// The backend API only accepts the original 3 entry point IDs. Map any new
+// stop-based entry point to the nearest server-accepted one so the API call
+// succeeds. All actual routing remains client-side and ignores this value.
+const SERVER_ACCEPTED = {
+  central_station: { lat: 52.3791, lng: 4.9003 },
+  anne_frank:      { lat: 52.3752, lng: 4.8840 },
+  skinny_bridge:   { lat: 52.3637, lng: 4.9024 },
+};
+
+export function toServerEntryPointId(entryPointId) {
+  if (entryPointId in SERVER_ACCEPTED) return entryPointId;
+  const ep = ENTRY_POINTS[entryPointId];
+  if (!ep) return 'central_station';
+  let nearest = 'central_station';
+  let minDist = Infinity;
+  for (const [id, coords] of Object.entries(SERVER_ACCEPTED)) {
+    const dist = haversineKm(ep.lat, ep.lng, coords.lat, coords.lng);
+    if (dist < minDist) { minDist = dist; nearest = id; }
+  }
+  return nearest;
+}
+
 // Universal Google Maps navigation link (works on iOS + Android)
 export function mapsNavUrl(destLat, destLng) {
   return `https://www.google.com/maps/dir/?api=1&destination=${destLat},${destLng}&travelmode=bicycling`;
