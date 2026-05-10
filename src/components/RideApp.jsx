@@ -5,6 +5,7 @@ import {
   ENTRY_POINTS,
   buildStopRouteFromEntry,
   nearestEntryPoint,
+  toServerEntryPointId,
 } from '../data/rideRoutes';
 import {
   readSession,
@@ -159,7 +160,7 @@ export default function RideApp() {
       const startStop = skipToNext && epRoute.length > 1 ? epRoute[1] : epRoute[0];
       const startStopId = startStop?.id ?? entryPoint.stopId;
 
-      const serverSession = await createRideSession({ entryPoint: entryPoint.id });
+      const serverSession = await createRideSession({ entryPoint: toServerEntryPointId(entryPoint.id) });
       const newSession = {
         session_id: serverSession.session_id,
         entry_point: entryPoint.id,
