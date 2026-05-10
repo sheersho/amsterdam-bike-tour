@@ -144,10 +144,16 @@ export default function RideApp() {
 
   // ── Session creation (called after entry point is chosen) ───────────────────
 
-  async function startSession(entryPoint) {
+  async function startSession(entryPoint, skipToNext = false) {
     try {
       setCreating(true);
       setCreateError('');
+
+      // If user is within 50 m of the entry stop, begin at the next stop in the route
+      const epRoute = buildStopRouteFromEntry(entryPoint.id);
+      const startStop = skipToNext && epRoute.length > 1 ? epRoute[1] : epRoute[0];
+      const startStopId = startStop?.id ?? entryPoint.stopId;
+
       const serverSession = await createRideSession({ entryPoint: entryPoint.id });
       const newSession = {
         session_id: serverSession.session_id,
@@ -156,15 +162,16 @@ export default function RideApp() {
         is_paid: false,
         paid_at: null,
         unlock_expires_at: null,
-        current_stop_id: entryPoint.stopId,
-        last_content_url: `/ride/stop/${entryPoint.stopId}`,
         email: null,
         email_prompted: false,
         ...serverSession,
+        // Our computed start stop always wins over whatever the server returns
+        current_stop_id: startStopId,
+        last_content_url: `/ride/stop/${startStopId}`,
       };
       writeSession(newSession);
       setSession(newSession);
-      rideNavigate(`stop/${entryPoint.stopId}`);
+      rideNavigate(`stop/${startStopId}`);
     } catch (err) {
       setCreateError(err.message || 'Could not start session. Please check your connection.');
     } finally {
@@ -186,8 +193,8 @@ export default function RideApp() {
     }
   }
 
-  function handleEntryPointChosen(ep) {
-    startSession(ep);
+  function handleEntryPointChosen(ep, skipToNext = false) {
+    startSession(ep, skipToNext);
   }
 
   function handleContinueToNextStop() {

@@ -1,28 +1,16 @@
 import { STOPS } from './tourdata';
 
-export const ENTRY_POINTS = {
-  central_station: {
-    id: 'central_station',
-    stopId: 1,
-    name: 'Central Station',
-    lat: 52.3791,
-    lng: 4.9003,
-  },
-  anne_frank: {
-    id: 'anne_frank',
-    stopId: 4,
-    name: 'Anne Frank House',
-    lat: 52.3752,
-    lng: 4.8840,
-  },
-  skinny_bridge: {
-    id: 'skinny_bridge',
-    stopId: 8,
-    name: 'Skinny Bridge',
-    lat: 52.3637,
-    lng: 4.9024,
-  },
-};
+function slugify(name) {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
+}
+
+// All 10 stops are entry points
+export const ENTRY_POINTS = Object.fromEntries(
+  STOPS.map(stop => {
+    const id = slugify(stop.name);
+    return [id, { id, stopId: stop.id, name: stop.name, lat: stop.lat, lng: stop.lng }];
+  })
+);
 
 // Canonical tour stop order by ID
 const TOUR_ORDER = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -44,7 +32,7 @@ export function buildStopRouteFromEntry(entryPointId) {
 
 function deg2rad(d) { return d * (Math.PI / 180); }
 
-function haversineKm(lat1, lng1, lat2, lng2) {
+export function haversineKm(lat1, lng1, lat2, lng2) {
   const R = 6371;
   const dLat = deg2rad(lat2 - lat1);
   const dLng = deg2rad(lng2 - lng1);
@@ -54,14 +42,15 @@ function haversineKm(lat1, lng1, lat2, lng2) {
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
+// Returns { entryPoint, skipToNext } — skipToNext is true when user is within 50 m of the entry stop
 export function nearestEntryPoint(userLat, userLng) {
-  let nearest = ENTRY_POINTS.central_station;
+  let nearest = Object.values(ENTRY_POINTS)[0];
   let minDist = Infinity;
   for (const ep of Object.values(ENTRY_POINTS)) {
     const dist = haversineKm(userLat, userLng, ep.lat, ep.lng);
     if (dist < minDist) { minDist = dist; nearest = ep; }
   }
-  return nearest;
+  return { entryPoint: nearest, skipToNext: minDist < 0.05 };
 }
 
 // Universal Google Maps navigation link (works on iOS + Android)
