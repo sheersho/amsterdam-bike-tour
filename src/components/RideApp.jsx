@@ -18,6 +18,7 @@ import { createRideSession, getRideSession, getRideConfig } from '../lib/rideApi
 import RideLandingPage from './ride/RideLandingPage';
 import LocationPage from './ride/LocationPage';
 import RideStopPage from './ride/RideStopPage';
+import NavigationPage from './ride/NavigationPage';
 import PaywallPage from './ride/PaywallPage';
 import PaymentReturnPage from './ride/PaymentReturnPage';
 import EmailSaveModal from './ride/EmailSaveModal';
@@ -35,6 +36,7 @@ function parseRidePath() {
   switch (parts[0]) {
     case 'location': return { type: 'location' };
     case 'stop':     return { type: 'stop', stopId: parseInt(parts[1], 10) || null };
+    case 'navigate': return { type: 'navigate', stopId: parseInt(parts[1], 10) || null };
     case 'paywall':  return { type: 'paywall' };
     case 'return':   return { type: 'return' };
     case 'expired':  return { type: 'expired' };
@@ -258,6 +260,23 @@ export default function RideApp() {
     scrollToTopInstant();
   }
 
+  function handleOpenNavigation(stopId) {
+    rideNavigate(`navigate/${stopId}`);
+    scrollToTopInstant();
+  }
+
+  function handleNavigationArrival() {
+    // Mark arrival: advance session to next stop and go to its stop page
+    if (!nextStop) return;
+    const updated = patchSession({
+      current_stop_id: nextStop.id,
+      last_content_url: `/ride/stop/${nextStop.id}`,
+    });
+    setSession(updated);
+    rideNavigate(`stop/${nextStop.id}`);
+    scrollToTopInstant();
+  }
+
   function handleGoHome() {
     window.history.pushState({}, '', '/');
     window.dispatchEvent(new PopStateEvent('popstate'));
@@ -352,6 +371,29 @@ export default function RideApp() {
     );
   }
 
+  if (ridePath.type === 'navigate') {
+    // Resolve the stop from URL or fall back to session's current stop
+    const navStopId = ridePath.stopId || session?.current_stop_id;
+    const navStop = navStopId ? STOPS.find(s => s.id === navStopId) : currentStop;
+    const navRoute = getRoute();
+    const navRouteIndex = navStop ? navRoute.findIndex(s => s.id === navStop.id) : -1;
+    const navNextStop = navRouteIndex >= 0 && navRouteIndex < navRoute.length - 1
+      ? navRoute[navRouteIndex + 1]
+      : null;
+
+    return (
+      <NavigationPage
+        currentStop={navStop}
+        nextStop={navNextStop}
+        route={navRoute}
+        routeIndex={navRouteIndex}
+        routeLength={navRoute.length}
+        onArrival={handleNavigationArrival}
+        onBack={() => window.history.back()}
+      />
+    );
+  }
+
   if (ridePath.type === 'stop') {
     if (!currentStop) {
       return (
@@ -375,6 +417,7 @@ export default function RideApp() {
           session={session}
           paymentsEnabled={paymentsEnabled}
           onContinue={handleContinueToNextStop}
+          onNavigate={() => handleOpenNavigation(currentStop.id)}
           onPaywall={handlePaywall}
           onHome={handleGoHome}
           onPrevStop={() => handleNavigateByOffset(-1)}
