@@ -118,14 +118,17 @@ function isAudioFile(url) {
 
 async function tileFirst(request) {
   const cache = await caches.open(TILE_CACHE);
-  const cached = await cache.match(request);
+  // Use the URL string as cache key — avoids Request object mode conflicts
+  const cached = await cache.match(request.url);
   if (cached) return cached;
   try {
-    const response = await fetch(request, { mode: 'cors' });
-    if (response.ok) cache.put(request, response.clone());
+    // Fetch by URL only (not the Request object) so we can control mode/credentials
+    const response = await fetch(request.url, { mode: 'cors', credentials: 'omit' });
+    if (response.ok) cache.put(request.url, response.clone());
     return response;
   } catch {
-    return new Response('', { status: 503 });
+    // Offline and not cached — pass through to network (Leaflet will show grey tile)
+    return fetch(request).catch(() => new Response('', { status: 503 }));
   }
 }
 
