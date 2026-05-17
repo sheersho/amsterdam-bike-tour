@@ -2,8 +2,8 @@ export const STOPS = [
   {
     id: 1,
     name: "Central Station",
-    lat: 52.3791,
-    lng: 4.9003,
+    lat: 52.37663,
+    lng: 4.89964,
     image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Amsterdam_Centraal_2016-09-13.jpg/960px-Amsterdam_Centraal_2016-09-13.jpg",
     sections: [
       {
@@ -44,8 +44,8 @@ export const STOPS = [
   {
     id: 2,
     name: "Dam Square",
-    lat: 52.3730,
-    lng: 4.8933,
+    lat: 52.37300,
+    lng: 4.89305,
     image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Dam_Square_2024.jpg/960px-Dam_Square_2024.jpg",
     sections: [
       {
@@ -86,8 +86,8 @@ export const STOPS = [
   {
     id: 3,
     name: "Herengracht / Brouwersgracht",
-    lat: 52.3785,
-    lng: 4.8844,
+    lat: 52.37918,
+    lng: 4.89148,
     image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Keizersgracht_Jul_2019.jpg/960px-Keizersgracht_Jul_2019.jpg",
     sections: [
       {
@@ -128,8 +128,8 @@ export const STOPS = [
   {
     id: 4,
     name: "Anne Frank House",
-    lat: 52.3752,
-    lng: 4.8840,
+    lat: 52.37502,
+    lng: 4.88310,
     image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Amsterdam_%28NL%29%2C_Anne-Frank-Huis_--_2015_--_7185.jpg/960px-Amsterdam_%28NL%29%2C_Anne-Frank-Huis_--_2015_--_7185.jpg",
     sections: [
       {
@@ -170,8 +170,8 @@ export const STOPS = [
   {
     id: 5,
     name: "De 9 Straatjes",
-    lat: 52.3695,
-    lng: 4.8840,
+    lat: 52.37031,
+    lng: 4.88605,
     image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Brug_24_in_de_Hartenstraat_over_de_Herengracht_foto_2.jpg/960px-Brug_24_in_de_Hartenstraat_over_de_Herengracht_foto_2.jpg",
     sections: [
       {
@@ -212,8 +212,8 @@ export const STOPS = [
   {
     id: 6,
     name: "Vondelpark",
-    lat: 52.3580,
-    lng: 4.8686,
+    lat: 52.36108,
+    lng: 4.87373,
     image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Amsterdam%2C_Vondelpark%2C_at_the_pond-2.jpg/960px-Amsterdam%2C_Vondelpark%2C_at_the_pond-2.jpg",
     sections: [
       {
@@ -254,8 +254,8 @@ export const STOPS = [
   {
     id: 7,
     name: "Museumplein",
-    lat: 52.3590,
-    lng: 4.8832,
+    lat: 52.35918,
+    lng: 4.88413,
     image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Amsterdam%2C_Holland_%28Ank_kumar_%29_12.jpg/960px-Amsterdam%2C_Holland_%28Ank_kumar_%29_12.jpg",
     sections: [
       {
@@ -296,8 +296,8 @@ export const STOPS = [
   {
     id: 8,
     name: "Skinny Bridge",
-    lat: 52.3637,
-    lng: 4.9024,
+    lat: 52.36360,
+    lng: 4.90238,
     image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Amsterdam_Magere_Brug_3.jpg/960px-Amsterdam_Magere_Brug_3.jpg",
     sections: [
       {
@@ -338,8 +338,8 @@ export const STOPS = [
   {
     id: 9,
     name: "Flower Market",
-    lat: 52.3668,
-    lng: 4.8929,
+    lat: 52.36687,
+    lng: 4.89340,
     image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/SingelBloemenmarkt.jpg/960px-SingelBloemenmarkt.jpg",
     sections: [
       {
@@ -380,8 +380,8 @@ export const STOPS = [
   {
     id: 10,
     name: "Red Light District",
-    lat: 52.3741,
-    lng: 4.8990,
+    lat: 52.37412,
+    lng: 4.89735,
     image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Oudezijds_Achterburgwal.jpg/960px-Oudezijds_Achterburgwal.jpg",
     sections: [
       {
