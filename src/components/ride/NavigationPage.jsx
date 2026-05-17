@@ -4,6 +4,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { getSegment } from '../../data/routePolylines';
 import { mapsNavUrl } from '../../data/rideRoutes';
+import { isOffline, onConnectivityChange } from '../../lib/offlineCache';
 
 // ─── Leaflet icon fix (webpack / vite asset paths) ───────────────────────────
 delete L.Icon.Default.prototype._getIconUrl;
@@ -57,6 +58,7 @@ export default function NavigationPage({
   const [gpsError, setGpsError] = useState(false);
   const [routeType, setRouteType] = useState('curated'); // 'curated' | 'fastest'
   const [mapCenter, setMapCenter] = useState(null);
+  const [offline, setOffline] = useState(() => isOffline());
   const watchIdRef = useRef(null);
 
   const segment = currentStop && nextStop
@@ -71,6 +73,10 @@ export default function NavigationPage({
       : [52.3731, 4.8922]; // Amsterdam centre fallback
 
   // ── GPS watch ──────────────────────────────────────────────────────────────
+
+  useEffect(() => {
+    return onConnectivityChange((online) => setOffline(!online));
+  }, []);
 
   useEffect(() => {
     if (!navigator.geolocation) return;
@@ -193,6 +199,13 @@ export default function NavigationPage({
         <button className="nav-back-btn" onClick={onBack}>
           ← Back
         </button>
+
+        {/* Offline badge */}
+        {offline && (
+          <div className="nav-offline-badge">
+            📵 Offline — cached maps active
+          </div>
+        )}
       </div>
 
       {/* ── Info panel ── */}

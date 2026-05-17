@@ -24,6 +24,7 @@ import PaywallPage from './ride/PaywallPage';
 import PaymentReturnPage from './ride/PaymentReturnPage';
 import EmailSaveModal from './ride/EmailSaveModal';
 import ExpiredPage from './ride/ExpiredPage';
+import OfflinePreloadOverlay from './ride/OfflinePreloadOverlay';
 
 // ─── URL helpers ──────────────────────────────────────────────────────────────
 
@@ -66,6 +67,9 @@ export default function RideApp() {
   const [paymentsEnabled, setPaymentsEnabled] = useState(true);
   const [detecting, setDetecting] = useState(false);
   const [locationDenied, setLocationDenied] = useState(false);
+  // Phase 2: show offline preload overlay once after a new session is created
+  const [showPreload, setShowPreload] = useState(false);
+  const [pendingNavigate, setPendingNavigate] = useState(null); // path to go after preload
 
   // Keep ridePath in sync with browser navigation (back/forward)
   useEffect(() => {
@@ -177,7 +181,9 @@ export default function RideApp() {
       };
       writeSession(newSession);
       setSession(newSession);
-      rideNavigate(`stop/${startStopId}`);
+      // Phase 2: show preload overlay before first stop (once per new session)
+      setPendingNavigate(`stop/${startStopId}`);
+      setShowPreload(true);
     } catch (err) {
       setCreateError(err.message || 'Could not start session. Please check your connection.');
     } finally {
@@ -324,7 +330,21 @@ export default function RideApp() {
     rideNavigate('', { replace: true });
   }
 
+  function handlePreloadDone() {
+    setShowPreload(false);
+    if (pendingNavigate) {
+      const dest = pendingNavigate;
+      setPendingNavigate(null);
+      rideNavigate(dest);
+    }
+  }
+
   // ── Render ──────────────────────────────────────────────────────────────────
+
+  // Phase 2: offline preload overlay (shown once after new session creation)
+  if (showPreload) {
+    return <OfflinePreloadOverlay onDone={handlePreloadDone} />;
+  }
 
   // Check expiry on any stop page
   if (ridePath.type === 'stop' && session && isSessionExpired(session)) {
