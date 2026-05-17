@@ -58,9 +58,9 @@ export function nearestEntryPoint(userLat, userLng) {
 // stop-based entry point to the nearest server-accepted one so the API call
 // succeeds. All actual routing remains client-side and ignores this value.
 const SERVER_ACCEPTED = {
-  central_station: { lat: 52.3791, lng: 4.9003 },
-  anne_frank:      { lat: 52.3752, lng: 4.8840 },
-  skinny_bridge:   { lat: 52.3637, lng: 4.9024 },
+  central_station: { lat: 52.37663, lng: 4.89964 },
+  anne_frank:      { lat: 52.37502, lng: 4.88310 },
+  skinny_bridge:   { lat: 52.36360, lng: 4.90238 },
 };
 
 export function toServerEntryPointId(entryPointId) {
